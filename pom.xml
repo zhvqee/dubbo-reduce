@@ -11,6 +11,10 @@
     <modules>
         <module>serialization-module</module>
         <module>serialization-module/serialzation-hessian2</module>
+        <module>remoting-module</module>
+        <module>remoting-module/remoting-api</module>
+        <module>common-module</module>
+        <module>remoting-module/remoting-netty4</module>
     </modules>
 
     <build>

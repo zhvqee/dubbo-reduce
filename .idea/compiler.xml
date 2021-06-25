@@ -6,9 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="serialization-api" />
         <module name="serialization-module" />
+        <module name="common-module" />
+        <module name="remoting-module" />
+        <module name="remoting-netty4" />
+        <module name="remoting-api" />
         <module name="serialzation-hessian2" />
+        <module name="serialization-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
