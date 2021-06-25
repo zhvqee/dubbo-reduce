@@ -1,10 +1,12 @@
 package com.individual.remoting.api.exchange.codec;
 
+import com.individual.common.extentions.ExtensionLoader;
+import com.individual.common.utils.ByteUtils;
 import com.individual.remoting.api.buffer.ChannelBuffer;
 import com.individual.remoting.api.codec.Codec;
 import com.individual.remoting.api.exchange.request.Request;
 import com.individual.remoting.api.exchange.response.Response;
-
+import com.individual.serialization.api.Serialization;
 import java.io.IOException;
 
 /**
@@ -18,6 +20,16 @@ import java.io.IOException;
 
 
 public class ExchangeCodec implements Codec {
+
+    /**
+     * 魔数
+     */
+    protected static final short MAGIC = (short) 0xaabb;
+
+    protected static final byte FLAG_REQUEST = (byte) 0x80;
+    protected static final byte FLAG_TWOWAY = (byte) 0x40;
+    protected static final byte FLAG_EVENT = (byte) 0x20;
+
 
     /**
      * message encode to buffer
@@ -38,10 +50,25 @@ public class ExchangeCodec implements Codec {
         }
     }
 
-    private void encodeResponse(ChannelBuffer buffer, Response response) {
+    private void encodeRequest(ChannelBuffer buffer, Request request) {
+        byte[] header = new byte[16];
+
+        ByteUtils.writeShort(header, 0, MAGIC);
+
+        header[2] = FLAG_REQUEST;
+        if (request.isTwoWay()) {
+            header[2] |= FLAG_TWOWAY;
+        }
+        ByteUtils.writeLong(header, 3, request.getId());
+
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
+        serialization.
+
+
     }
 
-    private void encodeRequest(ChannelBuffer buffer, Request request) {
+    private void encodeResponse(ChannelBuffer buffer, Response response) {
+
 
     }
 

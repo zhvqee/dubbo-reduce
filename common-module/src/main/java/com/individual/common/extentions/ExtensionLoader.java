@@ -10,6 +10,10 @@ public class ExtensionLoader<T> {
         return null;
     }
 
+    public  T getDefaultExtension(){
+
+    }
+
     public T getAdaptiveExtension() {
         return null;
     }

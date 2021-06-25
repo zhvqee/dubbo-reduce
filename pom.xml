@@ -8,6 +8,11 @@
     <artifactId>dubbo-reduce</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <revision>1.0-SNAPSHOT</revision>
+
+    </properties>
     <modules>
         <module>serialization-module</module>
         <module>serialization-module/serialzation-hessian2</module>
