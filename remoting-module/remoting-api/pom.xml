@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>dubbo-reduce</artifactId>
         <groupId>org.zhvqee</groupId>
@@ -16,20 +15,13 @@
         <dependency>
             <groupId>org.zhvqee</groupId>
             <artifactId>common-module</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${revision}</version>
         </dependency>
-
         <dependency>
             <groupId>org.zhvqee</groupId>
             <artifactId>serialization-api</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${revision}</version>
         </dependency>
-
-        <!--<dependency>
-            <groupId>org.zhvqee</groupId>
-            <artifactId>serialzation-hessian2</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>-->
     </dependencies>
 
 

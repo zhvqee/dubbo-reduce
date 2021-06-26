@@ -15,6 +15,22 @@ public class ByteUtils {
         bytes[localtion + 1] = (byte) value;  //ox34
     }
 
+
+    /**
+     * id  4字节    0X11,22,33,44
+     *
+     * @param bytes
+     * @param localtion
+     * @param id
+     */
+    public static void writeInt(byte[] bytes, int localtion, int id) {
+        bytes[localtion + 3] = (byte) (id >>> 24);
+        bytes[localtion + 2] = (byte) (id >>> 16);
+        bytes[localtion + 1] = (byte) (id >>> 8);
+        bytes[localtion] = (byte) id;
+    }
+
+
     /**
      * id  8字节    0X11,22,33,44,55,66,77,88
      *
@@ -39,4 +55,11 @@ public class ByteUtils {
         System.out.println(Integer.toHexString(b[0]));
     }
 
+    public static int byte2Int(byte[] bytes, int location) {
+        return 0;
+    }
+
+    public static long byte2Long(byte[] header, int i) {
+        return 0;
+    }
 }

@@ -33,7 +33,7 @@ public class SerializationTest {
         user.setName("Jame");
         user.setSex(1);
         objectOutput.writeObject(user);
-
+        objectOutput.writeBytes(new byte[]{'a', 'b'});
         objectOutput.flushBuffer();
 
         InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());

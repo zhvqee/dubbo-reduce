@@ -11,7 +11,7 @@ public class ExtensionLoader<T> {
     }
 
     public  T getDefaultExtension(){
-
+        return null;
     }
 
     public T getAdaptiveExtension() {

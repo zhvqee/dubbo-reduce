@@ -12,6 +12,6 @@
 
     <artifactId>common-module</artifactId>
     <packaging>jar</packaging>
-
+    <version>${revision}</version>
 
 </project>
