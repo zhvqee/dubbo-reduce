@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="rpc-module" />
         <module name="common-module" />
+        <module name="serialization-jdk" />
         <module name="remoting-netty4" />
         <module name="remoting-api" />
         <module name="serialzation-hessian2" />

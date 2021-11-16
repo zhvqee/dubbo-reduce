@@ -1,6 +1,7 @@
 package com.individual.serialization.api;
 
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -16,7 +17,7 @@ public interface Serialization {
      * @param os serialize
      * @return
      */
-    ObjectOutput serialize(OutputStream os);
+    ObjectOutput serialize(OutputStream os) throws IOException;
 
 
     /**
@@ -25,5 +26,5 @@ public interface Serialization {
      * @param is
      * @return
      */
-    ObjectInput deserilize(InputStream is);
+    ObjectInput deserilize(InputStream is) throws IOException;
 }

@@ -59,7 +59,7 @@ public interface ObjectInput {
      * @return
      * @throws IOException
      */
-    Object readObject() throws IOException;
+    Object readObject() throws IOException, ClassNotFoundException;
 
     /**
      * read object
