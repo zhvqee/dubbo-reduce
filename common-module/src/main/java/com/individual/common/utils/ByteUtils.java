@@ -56,10 +56,20 @@ public class ByteUtils {
     }
 
     public static int byte2Int(byte[] bytes, int location) {
-        return 0;
+        return ((bytes[location + 3] & 0xFF) << 0) +
+                ((bytes[location + 2] & 0xFF) << 8) +
+                ((bytes[location + 1] & 0xFF) << 16) +
+                ((bytes[location + 0]) << 24);
     }
 
-    public static long byte2Long(byte[] header, int i) {
-        return 0;
+    public static long byte2Long(byte[] bytes, int location) {
+        return ((bytes[location + 7] & 0xFF) << 0) +
+                ((bytes[location + 6] & 0xFF) << 8) +
+                ((bytes[location + 5] & 0xFF) << 16) +
+                ((bytes[location + 4] & 0xFF) << 24) +
+                ((bytes[location + 3] & 0xFF) << 32) +
+                ((bytes[location + 2] & 0xFF) << 40) +
+                ((bytes[location + 1] & 0xFF) << 48) +
+                ((bytes[location + 0]) << 56);
     }
 }

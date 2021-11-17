@@ -71,23 +71,22 @@ public class ExchangeCodec implements Codec {
      * @return
      * @throws IOException
      */
+    //这里更改buffer 已足够解析，前面用了 LengthFieldBasedFrameDecoder
+
+    /**
+     * 交换层 编解码
+     * <p> 2+1+1+8+4 =16字节 1
+     * +----------------------------------------------------------------+|
+     * | 2 magic | 1 flag |1 status | 8 invokerId       | 4 body length | body |
+     * |  0,1    | 2      | 3       | 4,5,6,7,8,9,10,11 |  12          |   n  |
+     * +-----------------------------------------------------------------+
+     */
 
     @Override
-    public Object decode(ChannelBuffer buffer) throws IOException {
-
-        int readableBytes = buffer.readableBytes();
-        if (readableBytes < HEADER_LENGTH) {
-            return DecodeResult.NEED_MORE_INPUT;
-        }
+    public Object decode(ChannelBuffer buffer) throws IOException, ClassNotFoundException {
 
         byte[] header = new byte[HEADER_LENGTH];
         buffer.readBytes(header);
-        //验证 header.
-
-        int len = ByteUtils.byte2Int(header, 12);
-        if (buffer.readableBytes() < len) {
-            return DecodeResult.NEED_MORE_INPUT;
-        }
         if ((header[2] & FLAG_REQUEST) != 0) {
             long id = ByteUtils.byte2Long(header, 4);
             Request request = new Request();
@@ -95,20 +94,24 @@ public class ExchangeCodec implements Codec {
             if ((header[2] & FLAG_TWOWAY) != 0) {
                 request.setTwoWay(true);
             }
-            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
+            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
             ChannelBufferInputStream inputStream = new ChannelBufferInputStream(buffer);
             ObjectInput objectInput = serialization.deserilize(inputStream);
             request.setData(objectInput.readObject());
+            return request;
         } else {
-
+            long id = ByteUtils.byte2Long(header, 4);
             Response response = new Response();
+            response.setId(id);
+            //   response.setStatus();
 
-            //todo 待做
-
+            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
+            ChannelBufferInputStream inputStream = new ChannelBufferInputStream(buffer);
+            ObjectInput objectInput = serialization.deserilize(inputStream);
+            response.setData(objectInput.readObject());
+            //  response.setErrorMessage();
+            return response;
         }
-
-
-        return null;
     }
 
 
@@ -123,7 +126,7 @@ public class ExchangeCodec implements Codec {
         }
         ByteUtils.writeLong(header, 4, request.getId());
 
-        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
 
         // encode request data.
         int savedWriteIndex = buffer.writerIndex();
@@ -155,7 +158,7 @@ public class ExchangeCodec implements Codec {
         header[3] = (byte) response.getStatus();
         ByteUtils.writeLong(header, 4, response.getId());
 
-        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
 
         int readerIndex = buffer.readerIndex();
         buffer.readerIndex(readerIndex + HEADER_LENGTH);

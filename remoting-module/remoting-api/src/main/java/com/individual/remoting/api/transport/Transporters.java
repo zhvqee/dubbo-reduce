@@ -26,7 +26,7 @@ public class Transporters {
     }
 
     public static Transporter getTransporter(URL url) {
-        return ExtensionLoader.getExtensionLoader(Transporter.class).getAdaptiveExtension();
+        return ExtensionLoader.getExtensionLoader(Transporter.class).getDefaultExtension(); //目前只给netty，
     }
 
 

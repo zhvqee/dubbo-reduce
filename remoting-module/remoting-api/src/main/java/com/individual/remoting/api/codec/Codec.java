@@ -28,7 +28,8 @@ public interface Codec {
      * @return
      * @throws IOException
      */
-    Object decode(ChannelBuffer buffer) throws IOException;
+    Object decode(ChannelBuffer buffer) throws IOException, ClassNotFoundException;
+
 
 
     enum DecodeResult {

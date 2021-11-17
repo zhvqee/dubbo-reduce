@@ -1,22 +1,22 @@
 package com.individual.remoting.netty4.codec;
 
-import com.individual.remoting.api.buffer.ChannelBuffer;
 import com.individual.remoting.api.codec.Codec;
 import com.individual.remoting.netty4.buffer.NettyBackedChannelBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-import java.io.IOException;
-import java.util.List;
+import java.nio.ByteOrder;
 
 public class NettyCodecAdapter {
 
     private ChannelHandler encoder = new InternalEncoder();
 
     private ChannelHandler decoder = new InternalDecoder();
+
+    private static final int MAX_LENGTH_FRAME = 3 * 1024 * 1204;
 
 
     private Codec codec;
@@ -42,27 +42,31 @@ public class NettyCodecAdapter {
         }
     }
 
-    private class InternalDecoder extends ByteToMessageDecoder {
+    /**
+     * 交换层 编解码
+     * <p> 2+1+1+8+4 =16字节 1
+     * +----------------------------------------------------------------+|
+     * | 2 magic | 1 flag |1 status | 8 invokerId       | 4 body length | body |
+     * |  0,1    | 2      | 3       | 4,5,6,7,8,9,10,11 |  12          |   n  |
+     * +-----------------------------------------------------------------+
+     */
+
+    private class InternalDecoder extends LengthFieldBasedFrameDecoder {
+        public InternalDecoder() {
+            this(ByteOrder.BIG_ENDIAN, MAX_LENGTH_FRAME, 12, 4, 0, 0, true);
+        }
+
+        public InternalDecoder(ByteOrder byteOrder, int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip, boolean failFast) {
+            super(byteOrder, maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip, failFast);
+        }
 
         @Override
-        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-            ChannelBuffer channelBuffer = new NettyBackedChannelBuffer(in);
-            int readerIndex = channelBuffer.readerIndex();
-
-            while (true) {
-                Object result = NettyCodecAdapter.this.codec.decode(channelBuffer);
-                if (result == Codec.DecodeResult.NEED_MORE_INPUT) {
-                    channelBuffer.readerIndex(readerIndex);
-                    break;
-                } else {
-                    if (readerIndex == channelBuffer.readerIndex()) {
-                        throw new IOException("Decode without read data.");
-                    }
-                }
-                if (result != null) {
-                    out.add(result);
-                }
+        protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+            Object decode = super.decode(ctx, in);
+            if (decode != null) {
+                return NettyCodecAdapter.this.codec.decode(new NettyBackedChannelBuffer(in));
             }
+            return null;
         }
     }
 }
