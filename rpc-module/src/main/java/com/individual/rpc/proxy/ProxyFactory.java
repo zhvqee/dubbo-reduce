@@ -1,6 +1,6 @@
-package com.indicidual.rpc.proxy;
+package com.individual.rpc.proxy;
 
-import com.indicidual.rpc.Invoker;
+import com.individual.rpc.Invoker;
 
 import java.net.URL;
 

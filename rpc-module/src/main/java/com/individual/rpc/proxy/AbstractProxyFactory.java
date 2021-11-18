@@ -1,8 +1,8 @@
-package com.indicidual.rpc.proxy;
+package com.individual.rpc.proxy;
 
-import com.indicidual.rpc.InvocationHandler;
-import com.indicidual.rpc.Invoker;
-import com.indicidual.rpc.defaults.inters.EchoService;
+import com.individual.rpc.InvocationHandler;
+import com.individual.rpc.Invoker;
+import com.individual.rpc.defaults.inters.EchoService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

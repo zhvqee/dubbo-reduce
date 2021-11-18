@@ -23,6 +23,10 @@
             <scope>test</scope>
             <version>4.10</version>
         </dependency>
+        <dependency>
+            <artifactId>common-module</artifactId>
+            <groupId>org.zhvqee</groupId>
+        </dependency>
     </dependencies>
 
 

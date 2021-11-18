@@ -1,8 +1,8 @@
-package com.indicidual.rpc.proxy;
+package com.individual.rpc.proxy;
 
-import com.indicidual.rpc.InvocationHandler;
-import com.indicidual.rpc.Invoker;
-import com.indicidual.rpc.Result;
+import com.individual.rpc.InvocationHandler;
+import com.individual.rpc.Invoker;
+import com.individual.rpc.Result;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;

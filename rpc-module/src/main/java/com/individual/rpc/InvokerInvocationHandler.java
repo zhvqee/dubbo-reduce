@@ -1,4 +1,6 @@
-package com.indicidual.rpc;
+package com.individual.rpc;
+
+import java.util.Arrays;
 
 public class InvokerInvocationHandler<T> implements InvocationHandler {
 
@@ -9,6 +11,19 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
     private Class<?>[] parameterTypes;
 
     private Object[] arguments;
+
+    public InvokerInvocationHandler(Invoker<T> invoker, String methodName, Object[] arguments) {
+        this.invoker = invoker;
+        this.methodName = methodName;
+        this.arguments = arguments;
+        Class<?>[] clzzArr = null;
+        if (arguments == null || arguments.length == 0) {
+            clzzArr = new Class[0];
+        } else {
+            clzzArr = Arrays.stream(arguments).map(Object::getClass).toArray(Class[]::new);
+        }
+        setParameterTypes(clzzArr);
+    }
 
     public InvokerInvocationHandler(Invoker<T> invoker) {
         this.invoker = invoker;

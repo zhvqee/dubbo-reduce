@@ -1,10 +1,11 @@
 package com.individual.rpc.test;
 
-import com.indicidual.rpc.InvocationHandler;
-import com.indicidual.rpc.Invoker;
-import com.indicidual.rpc.proxy.AbstractProxyInvoker;
-import com.indicidual.rpc.proxy.ProxyFactory;
-import com.indicidual.rpc.proxy.core.BuddyProxyFactory;
+import com.individual.rpc.InvocationHandler;
+import com.individual.rpc.Invoker;
+import com.individual.rpc.proxy.AbstractProxyInvoker;
+import com.individual.rpc.proxy.ProxyFactory;
+import com.individual.rpc.proxy.core.BuddyProxyFactory;
+import com.individual.rpc.proxy.core.JdkProxyFactory;
 import org.junit.Test;
 
 public class BuddyProxyTest {
@@ -52,15 +53,16 @@ public class BuddyProxyTest {
     }
 
 
-
     @Test
-    public  void testGetProxy(){
+    public void testGetBuddyProxy() {
         ProxyFactory proxyFactory = new BuddyProxyFactory();
-     //   Invoker<Op> invoker = proxyFactory.getInvoker(new User("jame", 31), Op.class, null);
+        //   Invoker<Op> invoker = proxyFactory.getInvoker(new User("jame", 31), Op.class, null);
 
         Op proxyFactoryProxy = proxyFactory.getProxy(new AbstractProxyInvoker<Op>() {
             @Override
             protected Object doInvoke(InvocationHandler invocationHandler) {
+                System.out.println(invocationHandler.getMethodName() + ":" + invocationHandler.getArguments()
+                        + "：" + invocationHandler.getArguments());
                 return null;
             }
 
@@ -70,7 +72,31 @@ public class BuddyProxyTest {
             }
         });
         proxyFactoryProxy.print();
-        proxyFactoryProxy.compute(9,5);
+        proxyFactoryProxy.compute(9, 5);
+        System.out.println(proxyFactoryProxy.toString());
+        System.out.println(proxyFactoryProxy.hashCode());
+    }
+
+    @Test
+    public void testGetJDKProxy() {
+        ProxyFactory proxyFactory = new JdkProxyFactory();
+        //   Invoker<Op> invoker = proxyFactory.getInvoker(new User("jame", 31), Op.class, null);
+
+        Op proxyFactoryProxy = proxyFactory.getProxy(new AbstractProxyInvoker<Op>() {
+            @Override
+            protected Object doInvoke(InvocationHandler invocationHandler) {
+                System.out.println(invocationHandler.getMethodName() + ":" + invocationHandler.getArguments()
+                        + "：" + invocationHandler.getArguments());
+                return null;
+            }
+
+            @Override
+            public Class<Op> getInterface() {
+                return Op.class;
+            }
+        });
+        proxyFactoryProxy.print();
+        proxyFactoryProxy.compute(9, 5);
     }
 
     interface Op {

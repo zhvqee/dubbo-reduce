@@ -1,4 +1,4 @@
-package com.indicidual.rpc;
+package com.individual.rpc;
 
 public interface Invoker<T> {
 

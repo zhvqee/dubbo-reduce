@@ -1,6 +1,6 @@
-package com.indicidual.rpc.proxy;
+package com.individual.rpc.proxy;
 
-import com.indicidual.rpc.Result;
+import com.individual.rpc.Result;
 
 public class AsynResult implements Result {
 
