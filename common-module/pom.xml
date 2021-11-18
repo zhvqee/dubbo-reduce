@@ -13,5 +13,15 @@
     <artifactId>common-module</artifactId>
     <packaging>jar</packaging>
     <version>${revision}</version>
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>4.10</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
