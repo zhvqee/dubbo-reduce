@@ -8,7 +8,7 @@ package org.qee.cloud.common.exceptions;
  * @Date: 2021/11/18 1:11 下午
  * @Version: 1.0
  */
-public class ProxyException extends RuntimeException {
+public class ProxyException extends CloudException {
     public ProxyException(String message) {
         super(message);
     }

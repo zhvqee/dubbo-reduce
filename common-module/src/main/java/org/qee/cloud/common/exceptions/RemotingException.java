@@ -2,7 +2,7 @@ package org.qee.cloud.common.exceptions;
 
 import java.net.InetSocketAddress;
 
-public class RemotingException extends Exception {
+public class RemotingException extends CloudException {
 
 
     private InetSocketAddress localAddress;
