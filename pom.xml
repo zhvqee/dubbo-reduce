@@ -14,6 +14,7 @@
         <module>serialization-module</module>
         <module>remoting-module</module>
         <module>common-module</module>
+        <module>registry-module</module>
     </modules>
 
     <build>
