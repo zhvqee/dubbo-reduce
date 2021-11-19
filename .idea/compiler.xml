@@ -12,6 +12,8 @@
         <module name="registry-module" />
         <module name="common-module" />
         <module name="remoting-netty4" />
+        <module name="rpc-module" />
+        <module name="serialization-jdk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />
