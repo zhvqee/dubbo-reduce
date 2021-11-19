@@ -8,11 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="serialzation-hessian2" />
         <module name="common-module" />
-        <module name="serialization-jdk" />
-        <module name="rpc-module" />
-        <module name="remoting-netty4" />
-        <module name="remoting-api" />
         <module name="serialization-api" />
+        <module name="remoting-netty4" />
+        <module name="rpc-module" />
+        <module name="remoting-api" />
+        <module name="serialization-jdk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />

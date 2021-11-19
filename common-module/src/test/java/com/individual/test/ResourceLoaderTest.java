@@ -1,6 +1,6 @@
 package com.individual.test;
 
-import com.individual.common.extentions.ResourceLoader;
+import org.qee.cloud.common.extentions.ResourceLoader;
 import org.junit.Test;
 
 import java.io.IOException;

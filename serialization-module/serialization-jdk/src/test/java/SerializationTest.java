@@ -1,6 +1,6 @@
-import com.individual.serialization.api.ObjectInput;
-import com.individual.serialization.api.ObjectOutput;
-import com.individual.serialization.api.Serialization;
+import org.qee.cloud.serialization.api.ObjectInput;
+import org.qee.cloud.serialization.api.ObjectOutput;
+import org.qee.cloud.serialization.api.Serialization;
 import com.individual.serialization.concretion.jdk.JdkSerialization;
 import lombok.Data;
 import lombok.ToString;
