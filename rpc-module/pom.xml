@@ -5,23 +5,29 @@
     <parent>
         <artifactId>dubbo-reduce</artifactId>
         <groupId>org.zhvqee</groupId>
-        <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>common-module</artifactId>
-    <packaging>jar</packaging>
-    <version>${revision}</version>
-    <dependencies>
+    <artifactId>rpc-module</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.9.3</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <version>4.10</version>
         </dependency>
-
+        <dependency>
+            <artifactId>common-module</artifactId>
+            <groupId>org.zhvqee</groupId>
+        </dependency>
     </dependencies>
+
 
 </project>

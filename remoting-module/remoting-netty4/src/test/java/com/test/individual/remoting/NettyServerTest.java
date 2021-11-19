@@ -1,10 +1,10 @@
 package com.test.individual.remoting;
 
-import com.individual.common.exceptions.RemotingException;
-import com.individual.common.model.URL;
-import com.individual.remoting.api.channel.Channel;
-import com.individual.remoting.api.channelHanlder.ChannelHandler;
-import com.individual.remoting.netty4.server.Netty4Server;
+import org.qee.cloud.common.exceptions.RemotingException;
+import org.qee.cloud.common.model.URL;
+import org.qee.cloud.remoting.api.channel.Channel;
+import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
+import org.qee.cloud.remoting.netty4.server.Netty4Server;
 import org.junit.Test;
 
 public class NettyServerTest {
