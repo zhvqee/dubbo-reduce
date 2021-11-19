@@ -1,6 +1,6 @@
 
 #自适应，在程序中动态查询
-org.qee.cloud.common.extentions.Adpative=default:org.qee.cloud.spring.test.DefaultTest,\
+org.qee.cloud.common.annotations.Adaptive=default:org.qee.cloud.spring.test.DefaultTest,\
 test:org.qee.cloud.spring.test.DefaultTest
 
 

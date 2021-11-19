@@ -14,6 +14,10 @@ public class SpringObjectFactory implements ObjectFactory {
         applicationContextList.addAll(applicationContextList);
     }
 
+    public void setApplicationContextList(List<ApplicationContext> applicationContextList) {
+        applicationContextList.addAll(applicationContextList);
+    }
+
     @Override
     public Object getObject(String name, Class<?> clzz) {
         for (ApplicationContext applicationContext : applicationContextList) {

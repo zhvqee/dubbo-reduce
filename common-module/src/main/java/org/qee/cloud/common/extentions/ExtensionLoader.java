@@ -8,6 +8,7 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.lang3.StringUtils;
 import org.qee.cloud.common.annotations.Adaptive;
+import org.qee.cloud.common.annotations.AutoLoad;
 import org.qee.cloud.common.annotations.BeanName;
 import org.qee.cloud.common.annotations.SPI;
 import org.qee.cloud.common.exceptions.SpiExtensionException;
@@ -84,6 +85,11 @@ public class ExtensionLoader<T> {
                     }
                     Object value = createOrGetExtensionInstance(targetClass);
                     holder.setValue(value);
+                    try {
+                        injectFiled(value, targetClass);
+                    } catch (InvocationTargetException | IllegalAccessException e) {
+                        Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
+                    }
                 }
             }
         }
@@ -109,12 +115,12 @@ public class ExtensionLoader<T> {
         try {
             instance = targetClass.newInstance();
             CLASS_TO_INS_MAP.put(targetClass, instance);
-            injectFiled(instance, targetClass);
+            // injectFiled(instance, targetClass);
         } catch (InstantiationException | IllegalAccessException e) {
             Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "没有默认构造函数");
-        } catch (InvocationTargetException e) {
+        } /*catch (InvocationTargetException e) {
             Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
-        }
+        }*/
         // 这里该对象进行包裹，比如包裹一层 Mock对象
 
         return instance;
@@ -127,6 +133,9 @@ public class ExtensionLoader<T> {
      * @param instance
      */
     private void injectFiled(Object instance, Class<?> targetClass) throws InvocationTargetException, IllegalAccessException {
+        if (instance == null || targetClass == null) {
+            return;
+        }
         for (Method method : targetClass.getMethods()) {
             if (!Reflects.isSetter(method)) {
                 continue;
@@ -170,7 +179,7 @@ public class ExtensionLoader<T> {
                 Asserts.assertTrue(propertiesList, SpiExtensionException.class, "查找不到资源文件:" + refClass.getName());
 
                 for (Properties properties : propertiesList) {
-                    String textValue = (String) properties.get(Adpative.class.getName());
+                    String textValue = (String) properties.get(Adaptive.class.getName());
                     resolvingConfig(textValue, false);
 
                     textValue = (String) properties.get(AutoLoad.class.getName());

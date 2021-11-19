@@ -1,7 +1,0 @@
-
-#自适应，在程序中动态查询
-org.qee.cloud.common.extentions.Adpative=test:com.test.TestServiceImpl,test2:com.test.TestServiceImpl,
-
-#程序框架必定要加载的
-org.qee.cloud.common.extentions.AutoLoad=com.test.TestServiceImpl,com.test.TestServiceImpl,com.test.TestServiceImpl
-
