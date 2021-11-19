@@ -18,6 +18,7 @@
         <module>rpc-module</module>
         <module>serialization-module/serialization-jdk</module>
         <module>registry-module</module>
+        <module>spring-module</module>
     </modules>
 
     <dependencyManagement>
@@ -33,6 +34,33 @@
                 <artifactId>common-module</artifactId>
                 <version>${revision}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.9.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>4.3.16.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>

@@ -1,4 +1,5 @@
-package com.individual.common.extentions;
+package org.qee.cloud.common.annotations;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,7 +8,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Activate {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BeanName {
+
+    String value() default "";
+
 }

@@ -15,7 +15,6 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.9.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

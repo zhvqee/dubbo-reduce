@@ -1,0 +1,8 @@
+
+#自适应，在程序中动态查询
+org.qee.cloud.common.extentions.Adpative=cloud-adaptive:org.qee.cloud.common.extentions.objectfactory.AdaptiveObjectFactory,\
+spi:org.qee.cloud.common.extentions.objectfactory.SpiObjectFactory
+
+#程序框架必定要加载的
+#org.qee.cloud.common.extentions.AutoLoad=
+

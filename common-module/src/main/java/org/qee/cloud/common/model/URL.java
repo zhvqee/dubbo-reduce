@@ -37,6 +37,11 @@ public class URL {
         return (ret = parameters.get(key)) != null ? ret : defaultValue;
     }
 
+    public String getParameter(String key) {
+        return parameters.get(key);
+    }
+
+
     public int getParameter(String key, int defaultValue) {
         String ret = null;
         return (ret = parameters.get(key)) != null ? Integer.parseInt(ret) : defaultValue;
@@ -65,11 +70,10 @@ public class URL {
         String host = null;
         int port = 0;
         String path = null;
-        Map<String, String> parameters = null;
+        Map<String, String> parameters = new HashMap<>();
         int i = url.indexOf('?'); // separator between body and parameters
         if (i >= 0) {
             String[] parts = url.substring(i + 1).split("&");
-            parameters = new HashMap<>();
             for (String part : parts) {
                 part = part.trim();
                 if (part.length() > 0) {

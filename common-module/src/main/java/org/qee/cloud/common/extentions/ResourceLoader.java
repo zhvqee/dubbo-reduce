@@ -2,10 +2,12 @@ package org.qee.cloud.common.extentions;
 
 import org.qee.cloud.common.exceptions.ResourceException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -19,14 +21,28 @@ import java.util.Properties;
 public class ResourceLoader {
 
 
-    public static Properties loadExtension(URL url) throws IOException {
+    public static Properties loadExtension(URL url) {
         if (url == null) {
             throw new ResourceException("资源url不存在");
         }
-        URLConnection urlConnection = url.openConnection();
-        InputStream inputStream = urlConnection.getInputStream();
-        Properties properties = new Properties();
-        properties.load(inputStream);
+        Properties properties = null;
+        try {
+            URLConnection urlConnection = url.openConnection();
+            InputStream inputStream = urlConnection.getInputStream();
+            properties = new Properties();
+            properties.load(inputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
+
+    public static List<Properties> loadExtension(Enumeration<URL> resources) {
+        List<Properties> properties = new ArrayList<>();
+        while (resources.hasMoreElements()) {
+            Properties prop = loadExtension(resources.nextElement());
+            properties.add(prop);
+        }
         return properties;
     }
 }

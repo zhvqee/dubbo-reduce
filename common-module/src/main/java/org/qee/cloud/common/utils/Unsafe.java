@@ -27,8 +27,8 @@ public class Unsafe {
     }
 
 
-    public static boolean compareAndSwap(Object obj, long offset, boolean originValue, boolean updateValue) {
-        return theUnsafe.compareAndSwapObject(obj, offset, originValue, updateValue);
+    public static boolean compareAndSwapInt(Object obj, long offset, int originValue, int updateValue) {
+        return theUnsafe.compareAndSwapInt(obj, offset, originValue, updateValue);
     }
 
     public static long getObjectOffset(Field field) {

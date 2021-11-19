@@ -2,6 +2,8 @@ package org.qee.cloud.common.utils;
 
 import org.qee.cloud.common.exceptions.CloudException;
 
+import java.util.Collection;
+
 /**
  * @ProjectName: qee-cloud
  * @Package: org.qee.cloud.common.utils
@@ -22,6 +24,13 @@ public class Asserts {
     @lombok.SneakyThrows
     public static void assertTrue(Object condition, Class<? extends CloudException> clzz, String errMsg) {
         if (condition == null) {
+            throw clzz.getDeclaredConstructor(String.class).newInstance(errMsg);
+        }
+    }
+
+    @lombok.SneakyThrows
+    public static void assertTrue(Collection condition, Class<? extends CloudException> clzz, String errMsg) {
+        if (condition == null || condition.isEmpty()) {
             throw clzz.getDeclaredConstructor(String.class).newInstance(errMsg);
         }
     }
