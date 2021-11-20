@@ -1,4 +1,4 @@
-package com.individual.registry;
+package org.qee.cloud.registry;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
