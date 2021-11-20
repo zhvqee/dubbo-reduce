@@ -3,7 +3,7 @@
 org.qee.cloud.common.annotations.Adaptive=default:org.qee.cloud.spring.test.DefaultTest,\
 test:org.qee.cloud.spring.test.DefaultTest
 
-org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.spring.test.DefaultTestWraper
+org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.spring.test.DefaultTestWraper,org.qee.cloud.spring.test.DefaultTestWraper2
 
 
 
