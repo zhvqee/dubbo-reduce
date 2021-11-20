@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 /**
- * @ProjectName: dubbo-reduce
+ * @ProjectName: qee-cloud
  * @Package: com.individual.serialization.concretion.jdk
  * @ClassName: JdkObjectInput
  * @Description:

@@ -37,5 +37,9 @@ org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.common.extentions.obje
 
 ## 查看点
 
+1、@CloudReference 类比 @DubboReference 为了实现DubboReference的所有功能，但是参数功能又非常的多。目前实现一些主要内容
+
+2、@CloudService 类比 @DubboService
+
 ## 使用手册
  

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.zhvqee</groupId>
-    <artifactId>dubbo-reduce</artifactId>
+    <artifactId>qee-cloud</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
     <properties>
@@ -32,6 +32,12 @@
             <dependency>
                 <groupId>org.zhvqee</groupId>
                 <artifactId>common-module</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.zhvqee</groupId>
+                <artifactId>rpc-module</artifactId>
                 <version>${revision}</version>
             </dependency>
 

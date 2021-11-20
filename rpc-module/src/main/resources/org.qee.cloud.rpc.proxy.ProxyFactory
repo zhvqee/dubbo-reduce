@@ -1,0 +1,5 @@
+
+#自适应，在程序中动态查询
+org.qee.cloud.common.annotations.Adaptive=buddy:org.qee.cloud.rpc.proxy.core.BuddyProxyFactory,jdk:org.qee.cloud.rpc.proxy.core.JdkProxyFactory
+
+

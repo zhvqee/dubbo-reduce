@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * @ProjectName: dubbo-reduce
+ * @ProjectName: qee-cloud
  * @Package: PACKAGE_NAME
  * @ClassName: SerializationTest
  * @Description:

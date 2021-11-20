@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * @ProjectName: dubbo-reduce
+ * @ProjectName: qee-cloud
  * @Package: com.individual.serialization.concretion.jdk
  * @ClassName: JdkSerialization
  * @Description:

@@ -1,7 +1,7 @@
 package org.qee.cloud.common.exceptions;
 
 /**
- * @ProjectName: dubbo-reduce
+ * @ProjectName: qee-cloud
  * @Package: com.individual.common.exceptions
  * @ClassName: ProxyException
  * @Description:

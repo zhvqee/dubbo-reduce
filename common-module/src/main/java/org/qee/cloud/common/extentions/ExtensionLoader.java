@@ -343,6 +343,22 @@ public class ExtensionLoader<T> {
             }
 
             Object param = Arrays.stream(args).filter(arg -> URL.class.isAssignableFrom(arg.getClass())).findFirst().orElse(null);
+            if (param == null) {
+                for (Object arg : args) {
+                    Class<?> argClass = arg.getClass();
+                    for (Method mth : argClass.getMethods()) {
+                        Class<?> returnType = mth.getReturnType();
+                        if (URL.class.isAssignableFrom(returnType) && mth.getParameterCount() == 0) {
+                            mth.setAccessible(true);
+                            param = mth.invoke(arg);
+                            break;
+
+                        }
+                    }
+                }
+            }
+
+
             Asserts.assertTrue(param, SpiExtensionException.class, "class:" + method.getDeclaringClass() + "没有参数类型为" + URL.class.getName());
 
             Adaptive annotation = method.getAnnotation(Adaptive.class);

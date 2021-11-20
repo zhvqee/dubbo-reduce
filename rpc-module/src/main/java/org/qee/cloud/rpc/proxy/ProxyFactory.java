@@ -1,9 +1,17 @@
 package org.qee.cloud.rpc.proxy;
 
+import org.qee.cloud.common.annotations.Adaptive;
+import org.qee.cloud.common.annotations.SPI;
 import org.qee.cloud.rpc.Invoker;
 
 import java.net.URL;
 
+/**
+ * 为了让 客户端像调用本地方法一样，远程调用服务，需要有一个代理工程
+ * 2、客户端通过getProxy 获得一个代理
+ * 服务端的实例T 封装为Invoker ，进行远程应答
+ */
+@SPI(name = "buddy")
 public interface ProxyFactory {
 
 
@@ -14,6 +22,7 @@ public interface ProxyFactory {
      * @param <T>
      * @return
      */
+    @Adaptive(keys = "buddy")
     <T> T getProxy(Invoker<T> invoker);
 
     /**
