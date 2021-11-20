@@ -31,4 +31,19 @@ public class SpringObjectFacotoryTest {
         aDefault.test(URL.valueOf("https://blog.csdn.net/"), "1234");
 
     }
+
+
+    @Test
+    public void getExtensionLoaderWraper() throws ClassNotFoundException, IOException {
+        ExtensionLoader<TestSpi> extensionLoader = ExtensionLoader.getExtensionLoader(TestSpi.class);
+        assert extensionLoader != null;
+
+        TestSpi adaptiveExtension = extensionLoader.getAdaptiveExtension();
+
+        adaptiveExtension.test(URL.valueOf("https://blog.csdn.net/"), "1234");
+
+        TestSpi aDefault = extensionLoader.getExtension("default");
+        aDefault.test(URL.valueOf("https://blog.csdn.net/"), "1234");
+
+    }
 }

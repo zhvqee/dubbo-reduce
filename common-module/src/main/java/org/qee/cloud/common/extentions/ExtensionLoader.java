@@ -58,7 +58,7 @@ public class ExtensionLoader<T> {
 
     private static String ADAPTIVE_NAME = "cloud-adaptive";
 
-    private static String WRAPPER_NAME="cloud-wraper";
+    private static String WRAPPER_NAME = "cloud-wraper";
 
 
     private volatile boolean inited;
@@ -114,7 +114,8 @@ public class ExtensionLoader<T> {
 
     private Object wrapperObject(Object value) {
         Object result = value;
-        if (!WRAPER_CLASS_MAP.isEmpty()) {
+        // adaptive object 在此时可能为null
+        if (value != null && !WRAPER_CLASS_MAP.isEmpty()) {
             LinkedHashMap<?, Integer> linkedHashMap = CollectionUtils.sortMap2(WRAPER_CLASS_MAP);
             Set<?> objects = linkedHashMap.keySet();
             for (Object object : objects) {
@@ -177,6 +178,12 @@ public class ExtensionLoader<T> {
             if (Reflects.isPrimitives(method.getParameterTypes()[0])) {
                 continue;
             }
+            //targetClass 目标实现类
+            // 包裹类，过滤 自身包裹类型，否则会把adaptive 类注入，引起递归调用 stackoverflow
+            if (targetClass.getAnnotation(AutoWraper.class) != null && method.getParameterTypes()[0].isAssignableFrom(targetClass)) {
+                continue;
+            }
+
             BeanName annotation = method.getAnnotation(BeanName.class);
             String beanName = null;
             if (annotation == null) {
