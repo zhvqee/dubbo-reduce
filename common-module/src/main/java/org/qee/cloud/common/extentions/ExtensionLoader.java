@@ -8,13 +8,14 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.lang3.StringUtils;
 import org.qee.cloud.common.annotations.Adaptive;
-import org.qee.cloud.common.annotations.AutoLoad;
+import org.qee.cloud.common.annotations.AutoWraper;
 import org.qee.cloud.common.annotations.BeanName;
 import org.qee.cloud.common.annotations.SPI;
 import org.qee.cloud.common.exceptions.SpiExtensionException;
 import org.qee.cloud.common.extentions.objectfactory.ObjectFactory;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.common.utils.Asserts;
+import org.qee.cloud.common.utils.CollectionUtils;
 import org.qee.cloud.common.utils.GeneratorKeys;
 import org.qee.cloud.common.utils.Reflects;
 import org.qee.cloud.common.utils.Throws;
@@ -26,10 +27,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ExtensionLoader<T> {
 
@@ -46,11 +50,15 @@ public class ExtensionLoader<T> {
 
     private ConcurrentHashMap<String, Class<?>> NAME_CLASS_MAP = new ConcurrentHashMap<>();
 
+    private ConcurrentHashMap<Class<?>, Integer> WRAPER_CLASS_MAP = new ConcurrentHashMap<>();
+
     private String defaultName;
 
     private Holder<T> adaptiveExtensionHolder = new Holder<>();
 
     private static String ADAPTIVE_NAME = "cloud-adaptive";
+
+    private static String WRAPPER_NAME="cloud-wraper";
 
 
     private volatile boolean inited;
@@ -84,16 +92,42 @@ public class ExtensionLoader<T> {
                         Asserts.assertTrue(targetClass != null, SpiExtensionException.class, "查找不到" + name + "扩展");
                     }
                     Object value = createOrGetExtensionInstance(targetClass);
+
                     holder.setValue(value);
+
                     try {
-                        injectFiled(value, targetClass);
+                        // 不在createOrGetExtensionInstance 注入属性是因为ObjectFactory 容器也是SPI，
+                        //当天进行内部injectField时。ObjectFactory 对象还未在holder中，会循环创建容器
+                        injectField(value, targetClass);
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
                     }
+
+                    // 这里该对象进行包裹，比如包裹一层 Mock对象
+                    value = wrapperObject(value);
+                    holder.setValue(value);
                 }
             }
         }
         return (T) holder.getValue();
+    }
+
+    private Object wrapperObject(Object value) {
+        Object result = value;
+        if (!WRAPER_CLASS_MAP.isEmpty()) {
+            LinkedHashMap<?, Integer> linkedHashMap = CollectionUtils.sortMap2(WRAPER_CLASS_MAP);
+            Set<?> objects = linkedHashMap.keySet();
+            for (Object object : objects) {
+                Class<?> clzz = (Class<?>) object;
+                try {
+                    result = clzz.getConstructor(refClass).newInstance(result);
+                    injectField(result, clzz);
+                } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                    Throws.throwException(SpiExtensionException.class, "class:" + clzz.getName() + "需要一个参数为" + refClass.getName() + "的构造函数");
+                }
+            }
+        }
+        return result;
     }
 
     public T getExtension(String name) {
@@ -115,13 +149,13 @@ public class ExtensionLoader<T> {
         try {
             instance = targetClass.newInstance();
             CLASS_TO_INS_MAP.put(targetClass, instance);
-            // injectFiled(instance, targetClass);
+            //injectFiled(instance, targetClass);
         } catch (InstantiationException | IllegalAccessException e) {
             Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "没有默认构造函数");
         } /*catch (InvocationTargetException e) {
             Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
         }*/
-        // 这里该对象进行包裹，比如包裹一层 Mock对象
+
 
         return instance;
     }
@@ -132,7 +166,7 @@ public class ExtensionLoader<T> {
      *
      * @param instance
      */
-    private void injectFiled(Object instance, Class<?> targetClass) throws InvocationTargetException, IllegalAccessException {
+    private void injectField(Object instance, Class<?> targetClass) throws InvocationTargetException, IllegalAccessException {
         if (instance == null || targetClass == null) {
             return;
         }
@@ -182,7 +216,7 @@ public class ExtensionLoader<T> {
                     String textValue = (String) properties.get(Adaptive.class.getName());
                     resolvingConfig(textValue, false);
 
-                    textValue = (String) properties.get(AutoLoad.class.getName());
+                    textValue = (String) properties.get(AutoWraper.class.getName());
                     resolvingConfig(textValue, true);
                 }
                 inited = true;
@@ -209,10 +243,15 @@ public class ExtensionLoader<T> {
                         classValue = StringUtils.trim(keyValue[1]);
                         key = StringUtils.trim(keyValue[0]);
                     } else {
-                        key = GeneratorKeys.generate("ext-load");
+                        key = GeneratorKeys.generate(WRAPPER_NAME);
                         classValue = StringUtils.trim(keyValue[0]);
+                        //这里wraper类
                     }
                     targetImplClass = Class.forName(classValue);
+                    if (autoGenerateKey) {
+                        AutoWraper annotation = targetImplClass.getAnnotation(AutoWraper.class);
+                        WRAPER_CLASS_MAP.put(targetImplClass, annotation.order());
+                    }
                     NAME_CLASS_MAP.put(key, targetImplClass);
                 } catch (ClassNotFoundException e) {
                     Throws.throwException(SpiExtensionException.class, "class:" + keyValue[1] + " 查找不到");
@@ -221,13 +260,17 @@ public class ExtensionLoader<T> {
         }
     }
 
-    public List<String> getAllLoadExtensionName(boolean includeAdaptive) {
+    /**
+     * 排除自适应的name 和wraper name(ext-load-xxx)
+     *
+     * @return
+     */
+    public List<String> getGeneralName() {
         getExtensionClasses();
         ArrayList<String> result = new ArrayList<>(NAME_CLASS_MAP.keySet());
-        if (!includeAdaptive) {
-            result.remove(ADAPTIVE_NAME);
-        }
-        return Collections.unmodifiableList(result);
+        result.remove(ADAPTIVE_NAME);
+        List<String> newResult = result.stream().filter(e -> !e.startsWith(WRAPPER_NAME)).collect(Collectors.toList());
+        return Collections.unmodifiableList(newResult);
     }
 
     public T getDefaultExtension() {

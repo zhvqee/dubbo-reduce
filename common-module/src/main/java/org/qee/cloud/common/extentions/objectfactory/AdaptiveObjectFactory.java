@@ -8,7 +8,7 @@ public class AdaptiveObjectFactory implements ObjectFactory {
     private List<String> allLoadExtensionName;
 
     public AdaptiveObjectFactory() {
-        allLoadExtensionName = ExtensionLoader.getExtensionLoader(ObjectFactory.class).getAllLoadExtensionName(false);
+        allLoadExtensionName = ExtensionLoader.getExtensionLoader(ObjectFactory.class).getGeneralName();
     }
 
     @Override

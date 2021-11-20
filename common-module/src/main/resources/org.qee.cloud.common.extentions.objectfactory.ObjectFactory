@@ -4,5 +4,5 @@ org.qee.cloud.common.annotations.Adaptive=cloud-adaptive:org.qee.cloud.common.ex
 spi:org.qee.cloud.common.extentions.objectfactory.SpiObjectFactory
 
 #程序框架必定要加载的
-#org.qee.cloud.common.extentions.AutoLoad=
+org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.common.extentions.objectfactory.TimeWatchedObjectFactory
 

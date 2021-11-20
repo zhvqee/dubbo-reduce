@@ -43,11 +43,11 @@ public class Reflects {
     }
 
     public static String getDefaultFieldName(Method method) {
-        return StringUtils.lowerCase(StringUtils.substring(method.getName(), 3, 1)) + StringUtils.substring(method.getName(), 4);
+        return StringUtils.lowerCase(StringUtils.substring(method.getName(), 3, 4)) + StringUtils.substring(method.getName(), 4);
     }
 
     public static void main(String[] args) {
-        String  ss="setA";
+        String ss = "setA";
         String s = StringUtils.lowerCase(StringUtils.substring(ss, 3, 4)) + StringUtils.substring(ss, 4);
         System.out.println(s);
 
