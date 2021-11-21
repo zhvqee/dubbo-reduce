@@ -39,7 +39,9 @@ org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.common.extentions.obje
 
 1、@CloudReference 类比 @DubboReference 为了实现DubboReference的所有功能，但是参数功能又非常的多。目前实现一些主要内容
 
-2、@CloudService 类比 @DubboService
+1) 实现远程服务的引用 2）把CloudReference代理的对象让Spring容器关联，即可以getBean拿到
+
+2、@CloudService 类比 @DubboService 1）实现类似 spring @Service 的 功能， 2）注册服务到注册中心
 
 ## 使用手册
  

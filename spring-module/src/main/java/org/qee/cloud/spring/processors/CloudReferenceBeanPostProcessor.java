@@ -100,7 +100,7 @@ public class CloudReferenceBeanPostProcessor extends InstantiationAwareBeanPostP
             if (field.getAnnotation(CloudReference.class) == null) {
                 return;
             }
-            AnnotationAttributes annotationAttributes = AnnotationUtils.getAnnotationAttributes(field, field.getAnnotation(CloudReference.class), true, true);
+            AnnotationAttributes annotationAttributes = AnnotationUtils.getAnnotationAttributes(field, field.getAnnotation(CloudReference.class), false, true);
             injectionMetadataList.add(new AnnotatedInjectionElement(field, annotationAttributes));
         });
         if (CollectionUtils.isEmpty(injectionMetadataList)) {
@@ -169,7 +169,7 @@ public class CloudReferenceBeanPostProcessor extends InstantiationAwareBeanPostP
     }
 
     private String getInjectedObjectBeanName(AnnotationAttributes annotationAttributes, Class<?> injectClassType) {
-        return injectClassType.getName() + ":" + annotationAttributes.get("group") + ":" + annotationAttributes.get("version");
+        return RemoteObjectUtils.getRemoteObjectInSpring(annotationAttributes, injectClassType);
     }
 
 }
