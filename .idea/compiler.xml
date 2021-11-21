@@ -10,12 +10,13 @@
         <module name="serialization-api" />
         <module name="remoting-api" />
         <module name="serialzation-hessian2" />
-        <module name="registry-module" />
         <module name="common-module" />
         <module name="remoting-netty4" />
         <module name="rpc-module" />
         <module name="serialization-jdk" />
         <module name="spring-module" />
+        <module name="registry-zookeeper" />
+        <module name="registry-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8" />

@@ -1,14 +1,16 @@
 package org.qee.cloud.common.model;
 
+import lombok.Data;
 import org.qee.cloud.common.constants.CommonConstants;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class URL {
 
-    private String protocal;
+    private String protocol;
 
     private String path;
 
@@ -20,8 +22,44 @@ public class URL {
 
     private Map<String, String> parameters;
 
-    public URL(String protocal, String host, int port, String path, Map<String, String> parameters) {
-        this.protocal = protocal;
+    public static URLBuilder builder() {
+        return new URLBuilder();
+    }
+
+
+    public static class URLBuilder {
+        private URL url;
+
+        URLBuilder() {
+            url = new URL();
+        }
+
+        public URLBuilder protocol(String protocol) {
+            url.setProtocol(protocol);
+            return this;
+        }
+
+        public URLBuilder host(String host) {
+            url.setHost(host);
+            return this;
+        }
+
+        public URLBuilder port(int port) {
+            url.setPort(port);
+            return this;
+        }
+
+        public URL build() {
+            return url;
+        }
+    }
+
+
+    public URL() {
+    }
+
+    public URL(String protocol, String host, int port, String path, Map<String, String> parameters) {
+        this.protocol = protocol;
         this.path = path;
         this.host = host;
         this.port = port;
@@ -144,5 +182,10 @@ public class URL {
         }
 
         return new URL(protocol, host, port, path, parameters);
+    }
+
+
+    public String toShortUrl() {
+        return protocol + "://" + host + ":" + port;
     }
 }
