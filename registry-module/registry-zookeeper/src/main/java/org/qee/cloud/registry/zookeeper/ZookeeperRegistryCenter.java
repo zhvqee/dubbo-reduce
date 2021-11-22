@@ -3,11 +3,8 @@ package org.qee.cloud.registry.zookeeper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.curator.retry.RetryUntilElapsed;
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
 import org.qee.cloud.common.exceptions.RegistryException;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.common.utils.Throws;
@@ -17,7 +14,6 @@ import org.qee.cloud.registry.api.RegistryCenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class ZookeeperRegistryCenter implements RegistryCenter {
 
@@ -90,17 +86,17 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
         String interfaceProviderVersion = url.getInterfaceGroupVersion();
 
         try {
+            List<URL> providerList = new ArrayList<>();
             recursiveCreateNode(ROOT + CONSUMERS + SEPARATOR + interfaceService + SEPARATOR + hostDomain, true);
-            List<URL> urlList = new ArrayList<>();
-            watchChild(ROOT + PROVIDERS + interfaceProviderVersion, watchedEvent -> {
-                //重新注册watch
-                // watchChild(ROOT + PROVIDERS + interfaceProviderVersion,)
-            });
+            curatorFramework.getChildren().usingWatcher(new CuratorWatcherImpl(ROOT + PROVIDERS, providerList, curatorFramework)).forPath(ROOT + PROVIDERS + interfaceProviderVersion);
+
             // listener;
+            if (listener != null) {
+                listener.notify(providerList);
+            }
         } catch (Exception e) {
             Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
         }
-
 
     }
 
@@ -138,24 +134,6 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
 
     }
 
-    public void callback(String path, Consumer<WatchedEvent> function) throws Exception {
-        curatorFramework.getData().usingWatcher(new Watcher() {
-            @Override
-            public void process(WatchedEvent watchedEvent) {
-                function.accept(watchedEvent);
-            }
-        }).forPath(path);
-    }
-
-
-    public void watchChild(String parentPath, Consumer<WatchedEvent> function) throws Exception {
-        curatorFramework.getChildren().usingWatcher(new CuratorWatcher() {
-            @Override
-            public void process(WatchedEvent watchedEvent) throws Exception {
-                function.accept(watchedEvent);
-            }
-        }).forPath(parentPath);
-    }
 
     public void setData(String path, String value) throws Exception {
         curatorFramework.setData().forPath(path, value.getBytes());

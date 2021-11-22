@@ -9,7 +9,7 @@ public interface NotifyListener {
     /**
      * 通知 urls 上的所有服务
      *
-     * @param urls
+     * @param providerUrls
      */
-    void notify(List<URL> urls);
+    void notify(List<URL> providerUrls);
 }
