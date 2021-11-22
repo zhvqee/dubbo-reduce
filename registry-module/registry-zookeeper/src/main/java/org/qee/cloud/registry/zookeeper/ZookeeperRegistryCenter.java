@@ -14,6 +14,8 @@ import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.registry.api.NotifyListener;
 import org.qee.cloud.registry.api.RegistryCenter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -48,7 +50,7 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
 
     //provider://127.0.0.1:20881/org.qee.service.DemoService:*:*
 
-    ///cloud/zookeeper/org.qee.service.DemoService:*:*/127.0.0.1:20881
+    ///cloud/zookeeper/provider/org.qee.service.DemoService:*:*/127.0.0.1:20881
     @Override
     public void register(URL url) {
         try {
@@ -60,31 +62,57 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
         String interfaceService = url.getPath();
         String hostDomain = url.getHostDomain();
 
-        recursiveCreateNode(ROOT + PROVIDERS + interfaceService + hostDomain);
-
+        try {
+            recursiveCreateNode(ROOT + PROVIDERS + SEPARATOR + interfaceService + SEPARATOR + hostDomain, true);
+        } catch (Exception e) {
+            Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
+        }
     }
-
 
 
     @Override
     public void unregister(URL url) {
-
+        Throws.throwException(RegistryException.class, "带开发....");
     }
 
+    //consumer://127.0.0.1:20881/org.qee.service.DemoService:*:*
+
+    //provider watch: cloud/zookeeper/provider/org.qee.service.DemoService:*:*
     @Override
     public void subscribe(URL url, NotifyListener listener) {
+        try {
+            recursiveCreateNode(ROOT + CONSUMERS, false);
+        } catch (Exception e) {
+            Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
+        }
+        String interfaceService = url.getPath();
+        String hostDomain = url.getHostDomain();
+        String interfaceProviderVersion = url.getInterfaceGroupVersion();
+
+        try {
+            recursiveCreateNode(ROOT + CONSUMERS + SEPARATOR + interfaceService + SEPARATOR + hostDomain, true);
+            List<URL> urlList = new ArrayList<>();
+            watchChild(ROOT + PROVIDERS + interfaceProviderVersion, watchedEvent -> {
+                //重新注册watch
+                // watchChild(ROOT + PROVIDERS + interfaceProviderVersion,)
+            });
+            // listener;
+        } catch (Exception e) {
+            Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
+        }
+
 
     }
 
     @Override
     public void unsubscribe(URL url, NotifyListener listener) {
-
+        Throws.throwException(RegistryException.class, "带开发....");
     }
 
     // org.qee.service.DemoService:*:*/127.0.0.1:20881
     public void recursiveCreateNode(String path, boolean ephemeral) throws Exception {
         if (!ephemeral) {
-            if (persistentExistNodePath.keySet().contains(path)) {
+            if (persistentExistNodePath.containsKey(path)) {
                 return;
             }
             if (curatorFramework.checkExists().forPath(path) != null) {
@@ -141,16 +169,5 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
         curatorFramework.close();
     }
 
-
-    public static void main(String[] args) throws Exception {
-        URL url = URL.valueOf("zookeeper://127.0.0.1:2181");
-        ZookeeperRegistryCenter zookeeperRegistryCenter = new ZookeeperRegistryCenter(url);
-
-        zookeeperRegistryCenter.recursiveCreateNode("/cloud/zookeeper/org.qee.service.DemoService:*:*/127.0.0.1:20881", true);
-
-        String data = zookeeperRegistryCenter.getData("/cloud/zookeeper/org.qee.service.DemoService:*:*/127.0.0.1:20881");
-        System.out.println(data);
-
-    }
 
 }

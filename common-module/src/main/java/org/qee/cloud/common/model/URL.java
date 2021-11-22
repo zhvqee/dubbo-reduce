@@ -26,6 +26,10 @@ public class URL {
         return new URLBuilder();
     }
 
+    public String getInterfaceGroupVersion() {
+        return getParameter("interface");
+    }
+
 
     public static class URLBuilder {
         private URL url;
