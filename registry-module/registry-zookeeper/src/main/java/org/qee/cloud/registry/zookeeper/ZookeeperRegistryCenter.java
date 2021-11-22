@@ -8,7 +8,9 @@ import org.apache.curator.retry.RetryUntilElapsed;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
+import org.qee.cloud.common.exceptions.RegistryException;
 import org.qee.cloud.common.model.URL;
+import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.registry.api.NotifyListener;
 import org.qee.cloud.registry.api.RegistryCenter;
 
@@ -19,6 +21,12 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
 
     public String ROOT = "/cloud/zookeeper/";
 
+    private String PROVIDERS = "/providers";
+
+    private String CONSUMERS = "/consumers";
+
+    private String SEPARATOR = "/";
+
     private final ConcurrentHashMap<String, Object> persistentExistNodePath = new ConcurrentHashMap<>();
 
     private final Object NULL_OBJECT = new Object();
@@ -26,6 +34,9 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
     private CuratorFramework curatorFramework;
 
     public ZookeeperRegistryCenter(URL url) {
+        if (!url.getProtocol().equals("zookeeper")) {
+            Throws.throwException(RegistryException.class, "连接注册中心zookeeper,url协议错误");
+        }
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(url.getHost() + ":" + url.getPort())
                 .retryPolicy(new RetryUntilElapsed(5000, 200))
@@ -35,10 +46,25 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
     }
 
 
+    //provider://127.0.0.1:20881/org.qee.service.DemoService:*:*
+
+    ///cloud/zookeeper/org.qee.service.DemoService:*:*/127.0.0.1:20881
     @Override
     public void register(URL url) {
+        try {
+            recursiveCreateNode(ROOT + PROVIDERS, false);
+        } catch (Exception e) {
+            Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
+        }
+        //org.qee.service.DemoService:*:*
+        String interfaceService = url.getPath();
+        String hostDomain = url.getHostDomain();
+
+        recursiveCreateNode(ROOT + PROVIDERS + interfaceService + hostDomain);
 
     }
+
+
 
     @Override
     public void unregister(URL url) {
@@ -55,7 +81,7 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
 
     }
 
-    // /cloud/zookeeper/abc
+    // org.qee.service.DemoService:*:*/127.0.0.1:20881
     public void recursiveCreateNode(String path, boolean ephemeral) throws Exception {
         if (!ephemeral) {
             if (persistentExistNodePath.keySet().contains(path)) {

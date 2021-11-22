@@ -97,6 +97,9 @@ public class URL {
         return port;
     }
 
+    public String getHostDomain() {
+        return host + ":" + port;
+    }
 
     public static URL valueOf(String url) {
         if (url == null || (url = url.trim()).length() == 0) {
