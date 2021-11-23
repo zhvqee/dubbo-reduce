@@ -55,4 +55,7 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
     public void setArguments(Object[] arguments) {
         this.arguments = arguments;
     }
+
+    public int getInvokeMode() {
+    }
 }

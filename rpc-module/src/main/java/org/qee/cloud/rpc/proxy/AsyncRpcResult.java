@@ -1,25 +1,28 @@
 package org.qee.cloud.rpc.proxy;
 
+import org.qee.cloud.remoting.api.exchange.response.Response;
 import org.qee.cloud.rpc.InvocationHandler;
 import org.qee.cloud.rpc.Result;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class AsyncRpcResult implements Result {
-    CompletableFuture<AsynResult> resultCompletableFuture;
+    CompletableFuture<Response> responseCompletableFuture;
     InvocationHandler invocationHandler;
 
-    public AsyncRpcResult(CompletableFuture<AsynResult> resultCompletableFuture, InvocationHandler invocationHandler) {
-        this.resultCompletableFuture = resultCompletableFuture;
+    public AsyncRpcResult(CompletableFuture<Response> responseCompletableFuture, InvocationHandler invocationHandler) {
+        this.responseCompletableFuture = responseCompletableFuture;
         this.invocationHandler = invocationHandler;
     }
 
     @Override
     public Object getValue() {
-        if (resultCompletableFuture.isDone()) {
+        if (responseCompletableFuture.isDone()) {
             try {
-                return resultCompletableFuture.get().getValue();
+                return responseCompletableFuture.get().getData();
             } catch (InterruptedException e) {
 
             } catch (ExecutionException e) {
@@ -30,10 +33,14 @@ public class AsyncRpcResult implements Result {
 
     }
 
+    public Object getValue(long timeout, TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
+        return responseCompletableFuture.get(timeout, timeUnit).getData();
+    }
+
     @Override
     public void setValue(Object value) {
         try {
-            resultCompletableFuture.get().setValue(value);
+            responseCompletableFuture.get().setData(value);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

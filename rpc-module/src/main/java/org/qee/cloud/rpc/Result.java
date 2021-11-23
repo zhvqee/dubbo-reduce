@@ -11,4 +11,9 @@ public interface Result {
     Throwable getException();
 
     void setException(Throwable t);
+
+    enum InvokeMode {
+        SYN,
+        ASYN;
+    }
 }

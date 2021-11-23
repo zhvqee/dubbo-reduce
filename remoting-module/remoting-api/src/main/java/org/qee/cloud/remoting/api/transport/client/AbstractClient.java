@@ -8,4 +8,6 @@ public abstract class AbstractClient extends AbstractEndPoint implements Client 
     public AbstractClient(URL url) {
         super(url);
     }
+
+
 }
