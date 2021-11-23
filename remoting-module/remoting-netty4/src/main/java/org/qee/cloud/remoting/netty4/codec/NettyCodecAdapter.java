@@ -1,12 +1,12 @@
 package org.qee.cloud.remoting.netty4.codec;
 
-import org.qee.cloud.remoting.api.codec.Codec;
-import org.qee.cloud.remoting.netty4.buffer.NettyBackedChannelBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.qee.cloud.remoting.api.codec.Codec;
+import org.qee.cloud.remoting.netty4.buffer.NettyBackedChannelBuffer;
 
 import java.nio.ByteOrder;
 
