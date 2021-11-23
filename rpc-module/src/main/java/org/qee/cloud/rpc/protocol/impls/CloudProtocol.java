@@ -14,6 +14,7 @@ import org.qee.cloud.rpc.protocol.Protocol;
 import org.qee.cloud.rpc.protocol.export.Exporter;
 import org.qee.cloud.rpc.proxy.AsyncRpcResult;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CloudProtocol implements Protocol {
@@ -49,17 +50,16 @@ public class CloudProtocol implements Protocol {
                     exchangeClient = exchangeClients[integer.getAndIncrement() % exchangeClients.length];
                 }
                 Request request = new Request();
-                Response response = exchangeClient.request(request);
-                AsyncRpcResult asyncRpcResult= new AsyncRpcResult(,invocationHandler);
-                return asyncRpcResult;
+                CompletableFuture<Response> completableFuture = exchangeClient.request(request);
+                return new AsyncRpcResult(completableFuture, invocationHandler);
             }
         };
     }
 
     private ExchangeClient[] getExchangeClients(URL url) {
-        Integer accepts = Integer.parseInt(url.getParameter("accepts"), 1);
-        ExchangeClient[] exchangeClient = new ExchangeClient[accepts];
-        for (int i = 0; i < accepts; i++) {
+        Integer iothreads = Integer.parseInt(url.getParameter("connections"), 1);
+        ExchangeClient[] exchangeClient = new ExchangeClient[iothreads];
+        for (int i = 0; i < iothreads; i++) {
             exchangeClient[i] = Exchangers.connect(url, exchangeHandler);
         }
         return exchangeClient;

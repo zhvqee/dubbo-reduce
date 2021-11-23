@@ -4,6 +4,9 @@ import org.qee.cloud.common.extentions.ExtensionLoader;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.remoting.api.codec.Codec;
 
+import static org.qee.cloud.common.constants.CommonConstants.*;
+
+
 /**
  * 抽象终端 主要处理 超时问题（包括调用超时，链接超时属性） 和编解码问题。客户端和服务端都是相同的编解码
  */

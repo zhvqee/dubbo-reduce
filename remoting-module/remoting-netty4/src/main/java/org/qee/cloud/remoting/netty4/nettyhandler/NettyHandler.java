@@ -20,7 +20,7 @@ import java.util.Map;
  * 2、维护了这个与这个服务端连接的对等客户端的channel通道，即通过map维护tcp 链接 即 1（一个服务端） : n （多个客户端）关系
  */
 @io.netty.channel.ChannelHandler.Sharable
-public class NettyServerHandler extends ChannelDuplexHandler {
+public class NettyHandler extends ChannelDuplexHandler {
 
     /**
      * 业务channel handler
@@ -33,7 +33,7 @@ public class NettyServerHandler extends ChannelDuplexHandler {
     private final Map<String, Channel> clientChannelMap;
 
 
-    public NettyServerHandler(ChannelHandler channelHandler, Map<String, Channel> clientChannelMap) {
+    public NettyHandler(ChannelHandler channelHandler, Map<String, Channel> clientChannelMap) {
         if (channelHandler == null) {
             throw new IllegalArgumentException("NettyServerHandler channelHandler is null");
         }

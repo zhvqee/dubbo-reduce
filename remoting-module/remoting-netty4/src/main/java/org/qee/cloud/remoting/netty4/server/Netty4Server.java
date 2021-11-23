@@ -7,7 +7,7 @@ import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
 import org.qee.cloud.remoting.api.channelHanlder.ChannelHandlers;
 import org.qee.cloud.remoting.api.transport.server.AbstractServer;
 import org.qee.cloud.remoting.netty4.codec.NettyCodecAdapter;
-import org.qee.cloud.remoting.netty4.nettyhandler.NettyServerHandler;
+import org.qee.cloud.remoting.netty4.nettyhandler.NettyHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -57,7 +57,7 @@ public class Netty4Server extends AbstractServer {
         worker = new NioEventLoopGroup(getUrl().getParameter(IO_THREADS_KEY, DEFAULT_IO_THREADS), new DefaultThreadFactory("NettyServerWorker", true));
         serverBootstrap = new ServerBootstrap();
         clientChannelMap = new ConcurrentHashMap<>();
-        NettyServerHandler nettyServerHandler = new NettyServerHandler(Netty4Server.this, clientChannelMap);
+        NettyHandler nettyServerHandler = new NettyHandler(Netty4Server.this, clientChannelMap);
 
         serverBootstrap.channel(NioServerSocketChannel.class)
                 .group(boss, worker)
