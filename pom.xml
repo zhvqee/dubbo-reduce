@@ -19,6 +19,7 @@
         <module>serialization-module/serialization-jdk</module>
         <module>registry-module</module>
         <module>spring-module</module>
+        <module>cluster-module</module>
     </modules>
 
     <dependencyManagement>
@@ -38,6 +39,12 @@
             <dependency>
                 <groupId>org.zhvqee</groupId>
                 <artifactId>rpc-module</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>cluster-module</artifactId>
+                <groupId>org.zhvqee</groupId>
                 <version>${revision}</version>
             </dependency>
 

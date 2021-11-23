@@ -23,8 +23,16 @@
             <version>4.10</version>
         </dependency>
         <dependency>
-            <artifactId>common-module</artifactId>
             <groupId>org.zhvqee</groupId>
+            <artifactId>common-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>cluster-module</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>registry-api</artifactId>
         </dependency>
     </dependencies>
 

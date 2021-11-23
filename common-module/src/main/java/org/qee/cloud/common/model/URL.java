@@ -20,7 +20,7 @@ public class URL {
     // by default, port to registry
     private int port;
 
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = new HashMap<>();
 
     public static URLBuilder builder() {
         return new URLBuilder();
@@ -28,6 +28,10 @@ public class URL {
 
     public String getInterfaceGroupVersion() {
         return getParameter("interface");
+    }
+
+    public void addParameter(String key, String value) {
+        parameters.put(key, value);
     }
 
 

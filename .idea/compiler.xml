@@ -16,6 +16,7 @@
         <module name="registry-api" />
         <module name="remoting-netty4" />
         <module name="rpc-module" />
+        <module name="cluster-module" />
         <module name="serialization-jdk" />
       </profile>
     </annotationProcessing>

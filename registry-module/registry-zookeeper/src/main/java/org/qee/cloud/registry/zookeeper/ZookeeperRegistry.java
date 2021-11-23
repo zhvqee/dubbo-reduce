@@ -9,13 +9,13 @@ import org.qee.cloud.common.exceptions.RegistryException;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.registry.api.NotifyListener;
-import org.qee.cloud.registry.api.RegistryCenter;
+import org.qee.cloud.registry.api.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ZookeeperRegistryCenter implements RegistryCenter {
+public class ZookeeperRegistry implements Registry {
 
     public String ROOT = "/cloud/zookeeper/";
 
@@ -31,7 +31,7 @@ public class ZookeeperRegistryCenter implements RegistryCenter {
 
     private CuratorFramework curatorFramework;
 
-    public ZookeeperRegistryCenter(URL url) {
+    public ZookeeperRegistry(URL url) {
         if (!url.getProtocol().equals("zookeeper")) {
             Throws.throwException(RegistryException.class, "连接注册中心zookeeper,url协议错误");
         }

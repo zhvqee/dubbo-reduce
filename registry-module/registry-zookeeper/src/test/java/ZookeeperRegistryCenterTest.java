@@ -1,6 +1,6 @@
 import org.junit.Test;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.registry.zookeeper.ZookeeperRegistryCenter;
+import org.qee.cloud.registry.zookeeper.ZookeeperRegistry;
 
 /**
  * @ProjectName: qee-cloud
@@ -15,7 +15,7 @@ public class ZookeeperRegistryCenterTest {
     @Test
     public void testRecursiveCreateNode() throws Exception {
         URL url = URL.valueOf("zookeeper://127.0.0.1:2181");
-        ZookeeperRegistryCenter zookeeperRegistryCenter = new ZookeeperRegistryCenter(url);
+        ZookeeperRegistry zookeeperRegistryCenter = new ZookeeperRegistry(url);
 
         zookeeperRegistryCenter.recursiveCreateNode("/cloud/zookeeper/org.qee.service.DemoService:*:*/127.0.0.1:20881", true);
 

@@ -2,7 +2,7 @@ package org.qee.cloud.registry.api;
 
 import org.qee.cloud.common.model.URL;
 
-public interface RegistryCenter {
+public interface Registry {
 
     void register(URL url);
 

@@ -8,6 +8,6 @@ import org.qee.cloud.common.model.URL;
 public interface RegistryFactory {
 
     @Adaptive(keys = "registry")
-    RegistryCenter getRegistry(URL url);
+    Registry getRegistry(URL url);
 
 }

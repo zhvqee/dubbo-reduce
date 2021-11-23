@@ -1,11 +1,14 @@
 package org.qee.cloud.rpc.config;
 
+import com.qee.cloud.cluster.Cluster;
 import lombok.Data;
-import org.qee.cloud.common.extentions.ExtensionLoader;
-import org.qee.cloud.rpc.InvocationHandler;
+import org.qee.cloud.common.model.URL;
+import org.qee.cloud.registry.api.RegistryCenterService;
 import org.qee.cloud.rpc.Invoker;
-import org.qee.cloud.rpc.proxy.AbstractProxyInvoker;
+import org.qee.cloud.rpc.protocol.Protocol;
 import org.qee.cloud.rpc.proxy.ProxyFactory;
+
+import java.util.List;
 
 @Data
 public class CloudReferenceConfig<T> {
@@ -28,26 +31,21 @@ public class CloudReferenceConfig<T> {
 
     private boolean inited;
 
-    private ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
+    private ProxyFactory proxyFactory;
+
+    private Cluster cluster;
+
+    private Protocol protocol;
 
     public T get() {
         if (inited && ref != null) {
             return ref;
         }
-
-        Invoker<T> invoker = new AbstractProxyInvoker<T>() {
-            @Override
-            protected Object doInvoke(InvocationHandler invocationHandler) {
-                // TODO: 2021/11/21  待做 
-                System.out.println("12233434343");
-                return null;
-            }
-
-            @Override
-            public Class<T> getInterface() {
-                return interfaceClass;
-            }
-        };
+        List<URL> registriesUrls = RegistryCenterService.getRegistriesUrls();
+        //目前先实现一个注册中心
+        // TODO: 2021/11/23  
+        URL registryUrl = registriesUrls.get(0);
+        Invoker<T> invoker = protocol.refer(interfaceClass, registryUrl);
         ref = proxyFactory.getProxy(invoker);
         return ref;
     }
