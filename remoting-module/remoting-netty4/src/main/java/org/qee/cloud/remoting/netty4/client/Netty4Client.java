@@ -13,10 +13,12 @@ import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.remoting.api.channel.Channel;
+import org.qee.cloud.remoting.api.channel.DefaultFuture;
 import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
 import org.qee.cloud.remoting.api.exchange.request.Request;
 import org.qee.cloud.remoting.api.exchange.response.Response;
 import org.qee.cloud.remoting.api.transport.client.AbstractClient;
+import org.qee.cloud.remoting.netty4.channel.NettyChannel;
 import org.qee.cloud.remoting.netty4.codec.NettyCodecAdapter;
 import org.qee.cloud.remoting.netty4.nettyhandler.NettyHandler;
 
@@ -72,7 +74,12 @@ public class Netty4Client extends AbstractClient {
 
     @Override
     public CompletableFuture<Response> request(Request request) {
-        return null;
+        ChannelFuture channelFuture = channel.writeAndFlush(request);
+        if (channelFuture.cause() != null) {
+            Throws.throwException(RemotingException.class, "远程异常");
+        }
+        return DefaultFuture.newFuture(NettyChannel.getOrAddChannel(channel), request);
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.qee.cloud.common.model.URL;
 
 /**
  * 抽象对等端，主要关注 端是否关闭 和存储该端的描述信息Url
+ * //dubbo 把对等端继承了Channel 能力，抽象太多次，没必要，ø
  */
 public abstract class AbstractPeer implements EndPoint {
 

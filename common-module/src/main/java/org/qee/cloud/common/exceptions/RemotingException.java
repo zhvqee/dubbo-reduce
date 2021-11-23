@@ -9,6 +9,9 @@ public class RemotingException extends CloudException {
 
     private InetSocketAddress remoteAddress;
 
+    public RemotingException(String message) {
+        super(message);
+    }
 
     public RemotingException(InetSocketAddress localAddress, InetSocketAddress remoteAddress, String message) {
         super(message);
