@@ -1,11 +1,13 @@
 package org.qee.cloud.registry.zookeeper;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.qee.cloud.common.model.URL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,8 +37,28 @@ public class CuratorWatcherImpl implements CuratorWatcher {
         if (event.getType() == Watcher.Event.EventType.None) {
             return;
         }
-        curatorFramework.getChildren().usingWatcher(this).forPath(parentPath);
-        List<String> childPathList = curatorFramework.getChildren().forPath(parentPath);
-        providerUrls.addAll(ss);
+        List<String> childPaths = curatorFramework.getChildren().usingWatcher(this).forPath(parentPath);
+        providerUrls.addAll(toUrlsWithoutEmpty(null, childPaths));
+    }
+
+    private List<URL> toUrlsWithEmpty(URL consumer, String path, List<String> providers) {
+        List<URL> urls = toUrlsWithoutEmpty(consumer, providers);
+
+        return urls;
+    }
+
+    private List<URL> toUrlsWithoutEmpty(URL consumer, List<String> providers) {
+        List<URL> urls = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(providers)) {
+            for (String provider : providers) {
+               /* if (provider.contains(PROTOCOL_SEPARATOR_ENCODED)) {
+                    URL url = URLStrParser.parseEncodedStr(provider);
+                    if (UrlUtils.isMatch(consumer, url)) {
+                        urls.add(url);
+                    }
+                }*/
+            }
+        }
+        return urls;
     }
 }
