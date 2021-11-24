@@ -22,6 +22,8 @@ public class RegistryProtocol implements Protocol {
 
     private Cluster cluster;
 
+    private Protocol protocol;
+
     @Override
     public <T> Invoker<T> refer(Class<T> refInterfaceClass, URL url) {
         Registry registry = registryFactory.getRegistry(url);
@@ -37,6 +39,9 @@ public class RegistryProtocol implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker, URL url) {
-        return null;
+        Registry registry = registryFactory.getRegistry(url);
+        URL providerUrl = getConsumerUrl(url);
+        registry.register(providerUrl);
+        return protocol.export(invoker, providerUrl);
     }
 }

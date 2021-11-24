@@ -2,9 +2,8 @@ package org.qee.cloud.rpc.proxy;
 
 import org.qee.cloud.common.annotations.Adaptive;
 import org.qee.cloud.common.annotations.SPI;
+import org.qee.cloud.common.model.URL;
 import org.qee.cloud.rpc.Invoker;
-
-import java.net.URL;
 
 /**
  * 为了让 客户端像调用本地方法一样，远程调用服务，需要有一个代理工程

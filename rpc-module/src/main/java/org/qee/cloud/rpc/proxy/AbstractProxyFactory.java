@@ -1,12 +1,12 @@
 package org.qee.cloud.rpc.proxy;
 
+import org.qee.cloud.common.model.URL;
 import org.qee.cloud.rpc.InvocationHandler;
 import org.qee.cloud.rpc.Invoker;
 import org.qee.cloud.rpc.defaults.inters.EchoService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
