@@ -34,6 +34,10 @@ public class URL {
         parameters.put(key, value);
     }
 
+    public void addParameters(Map<String, String> paramMap) {
+        parameters.putAll(paramMap);
+    }
+
 
     public static class URLBuilder {
         private URL url;

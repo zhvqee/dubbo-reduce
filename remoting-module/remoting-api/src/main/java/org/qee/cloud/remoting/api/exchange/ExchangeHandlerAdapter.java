@@ -1,14 +1,22 @@
-package org.qee.cloud.remoting.api.channelHanlder;
+package org.qee.cloud.remoting.api.exchange;
 
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.remoting.api.channel.Channel;
 
-public abstract class AbstractChannelHandlerDelegate implements ChannelHandler {
+import java.util.concurrent.CompletableFuture;
 
-    private ChannelHandler channelHandler;
-
-    public AbstractChannelHandlerDelegate(ChannelHandler channelHandler) {
-        this.channelHandler = channelHandler;
+/**
+ * @ProjectName: qee-cloud
+ * @Package: org.qee.cloud.remoting.api.exchange
+ * @ClassName: ExchangeHandlerAdapter
+ * @Description:
+ * @Date: 2021/11/24 2:19 下午
+ * @Version: 1.0
+ */
+public class ExchangeHandlerAdapter implements ExchangeHandler {
+    @Override
+    public CompletableFuture<Object> reply(Channel channel, Object request) throws RemotingException {
+        return null;
     }
 
     @Override

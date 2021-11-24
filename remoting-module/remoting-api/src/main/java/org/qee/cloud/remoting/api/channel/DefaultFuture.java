@@ -17,14 +17,15 @@
 package org.qee.cloud.remoting.api.channel;
 
 
+import org.qee.cloud.common.exceptions.CloudException;
 import org.qee.cloud.common.exceptions.RemotingException;
+import org.qee.cloud.common.exceptions.TimeOutException;
 import org.qee.cloud.remoting.api.exchange.request.Request;
 import org.qee.cloud.remoting.api.exchange.response.Response;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -95,11 +96,14 @@ public class DefaultFuture extends CompletableFuture<Response> {
         if (res.getStatus() == Response.OK) {
             this.complete(res);
         } else if (res.getStatus() == Response.CLIENT_TIMEOUT) {
-            this.completeExceptionally(new TimeoutException(res.getErrorMessage()));
+            CloudException cloudException = (CloudException) res.getData();
+            this.completeExceptionally(new TimeOutException("客户端超时:" + cloudException.getMessage()));
         } else if (res.getStatus() == Response.SERVER_TIMEOUT) {
-            this.completeExceptionally(new TimeoutException(res.getErrorMessage()));
+            CloudException cloudException = (CloudException) res.getData();
+            this.completeExceptionally(new TimeOutException("服务端超时:" + cloudException.getMessage()));
         } else {
-            this.completeExceptionally(new RemotingException(res.getErrorMessage()));
+            CloudException cloudException = (CloudException) res.getData();
+            this.completeExceptionally(new RemotingException("调用异常" + cloudException.getMessage()));
         }
     }
 }

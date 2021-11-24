@@ -8,7 +8,9 @@ import org.qee.cloud.rpc.Invoker;
 import org.qee.cloud.rpc.protocol.Protocol;
 import org.qee.cloud.rpc.proxy.ProxyFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class CloudReferenceConfig<T> {
@@ -41,10 +43,12 @@ public class CloudReferenceConfig<T> {
         if (inited && ref != null) {
             return ref;
         }
+        Map<String,String>  paramMap = new HashMap<>();
         List<URL> registriesUrls = RegistryCenterService.getRegistriesUrls();
         //目前先实现一个注册中心
         // TODO: 2021/11/23  
         URL registryUrl = registriesUrls.get(0);
+        registryUrl.addParameters(paramMap);
         Invoker<T> invoker = protocol.refer(interfaceClass, registryUrl);
         ref = proxyFactory.getProxy(invoker);
         return ref;

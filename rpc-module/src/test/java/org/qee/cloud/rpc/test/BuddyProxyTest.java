@@ -31,6 +31,11 @@ public class BuddyProxyTest {
             public Object[] getArguments() {
                 return new Object[0];
             }
+
+            @Override
+            public Class<?> getReturnType() {
+                return null;
+            }
         });
 
         invoker.invoke(new InvocationHandler() {
@@ -47,6 +52,11 @@ public class BuddyProxyTest {
             @Override
             public Object[] getArguments() {
                 return new Object[]{1, 2};
+            }
+
+            @Override
+            public Class<?> getReturnType() {
+                return null;
             }
         });
 

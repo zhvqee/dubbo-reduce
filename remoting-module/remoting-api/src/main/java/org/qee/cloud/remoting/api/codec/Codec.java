@@ -31,7 +31,6 @@ public interface Codec {
     Object decode(ChannelBuffer buffer) throws IOException, ClassNotFoundException;
 
 
-
     enum DecodeResult {
         NEED_MORE_INPUT, SKIP_SOME_INPUT
     }

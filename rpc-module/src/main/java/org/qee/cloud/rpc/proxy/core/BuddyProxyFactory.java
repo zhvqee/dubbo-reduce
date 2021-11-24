@@ -1,9 +1,5 @@
 package org.qee.cloud.rpc.proxy.core;
 
-import org.qee.cloud.common.exceptions.ProxyException;
-import org.qee.cloud.rpc.Invoker;
-import org.qee.cloud.rpc.InvokerInvocationHandler;
-import org.qee.cloud.rpc.proxy.AbstractProxyFactory;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.description.method.MethodDescription;
@@ -12,6 +8,10 @@ import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
+import org.qee.cloud.common.exceptions.ProxyException;
+import org.qee.cloud.rpc.Invoker;
+import org.qee.cloud.rpc.InvokerInvocationHandler;
+import org.qee.cloud.rpc.proxy.AbstractProxyFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -68,7 +68,8 @@ public class BuddyProxyFactory extends AbstractProxyFactory {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            InvokerInvocationHandler<T> invocationHandler = new InvokerInvocationHandler<>(invoker, method.getName(), args);
+
+            InvokerInvocationHandler<T> invocationHandler = new InvokerInvocationHandler<>(invoker, method.getName(), args, method.getReturnType());
             return invoker.invoke(invocationHandler);
         }
     }

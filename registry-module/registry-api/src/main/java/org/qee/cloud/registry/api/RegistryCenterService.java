@@ -15,7 +15,13 @@ import java.util.List;
  */
 public class RegistryCenterService {
 
+    private static List<URL> registryList = new ArrayList<>();
+
     public static List<URL> getRegistriesUrls() {
-        return new ArrayList<>();
+        return registryList;
+    }
+
+    public static void addRegistryUrl(URL url) {
+        registryList.add(url);
     }
 }

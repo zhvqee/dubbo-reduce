@@ -94,7 +94,8 @@ public class ExchangeCodec implements Codec {
             if ((header[2] & FLAG_TWOWAY) != 0) {
                 request.setTwoWay(true);
             }
-            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
+            request.setVersion("1.0"); //先写死
+            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
             ChannelBufferInputStream inputStream = new ChannelBufferInputStream(buffer);
             ObjectInput objectInput = serialization.deserilize(inputStream);
             request.setData(objectInput.readObject());
@@ -103,13 +104,12 @@ public class ExchangeCodec implements Codec {
             long id = ByteUtils.byte2Long(header, 4);
             Response response = new Response();
             response.setId(id);
-            //   response.setStatus();
+            response.setStatus(header[3]);
 
-            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
+            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
             ChannelBufferInputStream inputStream = new ChannelBufferInputStream(buffer);
             ObjectInput objectInput = serialization.deserilize(inputStream);
             response.setData(objectInput.readObject());
-            //  response.setErrorMessage();
             return response;
         }
     }
@@ -126,7 +126,7 @@ public class ExchangeCodec implements Codec {
         }
         ByteUtils.writeLong(header, 4, request.getId());
 
-        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
 
         // encode request data.
         int savedWriteIndex = buffer.writerIndex();
@@ -158,7 +158,7 @@ public class ExchangeCodec implements Codec {
         header[3] = (byte) response.getStatus();
         ByteUtils.writeLong(header, 4, response.getId());
 
-        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getAdaptiveExtension();
+        Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
 
         int readerIndex = buffer.readerIndex();
         buffer.readerIndex(readerIndex + HEADER_LENGTH);

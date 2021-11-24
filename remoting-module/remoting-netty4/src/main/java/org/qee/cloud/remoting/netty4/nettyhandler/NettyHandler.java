@@ -1,12 +1,12 @@
 package org.qee.cloud.remoting.netty4.nettyhandler;
 
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import org.qee.cloud.common.utils.NetUtils;
 import org.qee.cloud.remoting.api.channel.Channel;
 import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
 import org.qee.cloud.remoting.netty4.channel.NettyChannel;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 
 import java.net.InetSocketAddress;
 import java.util.Map;

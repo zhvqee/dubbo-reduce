@@ -12,7 +12,9 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     private Object[] arguments;
 
-    public InvokerInvocationHandler(Invoker<T> invoker, String methodName, Object[] arguments) {
+    private Class<?> returnTypeClass;
+
+    public InvokerInvocationHandler(Invoker<T> invoker, String methodName, Object[] arguments, Class<?> returnTypeClass) {
         this.invoker = invoker;
         this.methodName = methodName;
         this.arguments = arguments;
@@ -23,6 +25,7 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
             clzzArr = Arrays.stream(arguments).map(Object::getClass).toArray(Class[]::new);
         }
         setParameterTypes(clzzArr);
+        this.returnTypeClass = returnTypeClass;
     }
 
     public InvokerInvocationHandler(Invoker<T> invoker) {
@@ -44,6 +47,11 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
         return arguments;
     }
 
+    @Override
+    public Class<?> getReturnType() {
+        return returnTypeClass;
+    }
+
     public void setMethodName(String methodName) {
         this.methodName = methodName;
     }
@@ -56,6 +64,12 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
         this.arguments = arguments;
     }
 
+    /**
+     * 目前都为同步
+     *
+     * @return
+     */
     public int getInvokeMode() {
+        return Result.InvokeMode.SYN.ordinal();
     }
 }

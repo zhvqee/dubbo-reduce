@@ -1,0 +1,5 @@
+
+#自适应，在程序中动态查询
+org.qee.cloud.common.annotations.Adaptive=cloud:org.qee.cloud.rpc.protocol.impls.CloudProtocol
+
+

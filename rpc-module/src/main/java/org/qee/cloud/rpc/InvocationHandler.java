@@ -7,4 +7,6 @@ public interface InvocationHandler {
     Class<?>[] getParameterTypes();
 
     Object[] getArguments();
+
+    Class<?> getReturnType();
 }

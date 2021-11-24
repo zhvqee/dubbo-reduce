@@ -5,6 +5,7 @@ import org.qee.cloud.common.model.URL;
 import org.qee.cloud.remoting.api.transport.Transporters;
 
 /**
+ * dubbo 默认是，这里底层直接解码先
  * 默认的exchanger 提供心跳
  * decodeHandler->headerExchangerHandler-> 上层的channelHandler.
  * decodeHandler 接受的消息为request,或者response,或者event ,
@@ -15,12 +16,12 @@ public class HeaderExchanger implements Exchanger {
 
     @Override
     public ExchangeServer bind(URL url, ExchangeHandler channelHandler) throws RemotingException {
-        return new HeaderExchangeServer(Transporters.bind(url, new DecodeHanlder(new HeaderExchangeHandler(channelHandler))));
+        return new HeaderExchangeServer(Transporters.bind(url, channelHandler));
     }
 
     @Override
     public ExchangeClient connect(URL url, ExchangeHandler channelHandler) throws RemotingException {
-        return new HeaderExchangeClient(Transporters.connect(url, new DecodeHanlder(new HeaderExchangeHandler(channelHandler))));
+        return new HeaderExchangeClient(Transporters.connect(url, channelHandler));
 
     }
 }
