@@ -7,6 +7,9 @@ public class Response {
 
     public static final int SERVER_TIMEOUT = 402;
 
+    public static final int SERVER_ERR = 403;
+
+
     private long id;
 
     private Object data;

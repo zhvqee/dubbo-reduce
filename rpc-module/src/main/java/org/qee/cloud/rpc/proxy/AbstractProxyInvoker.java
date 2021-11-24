@@ -1,5 +1,6 @@
 package org.qee.cloud.rpc.proxy;
 
+import org.qee.cloud.remoting.api.exchange.response.Response;
 import org.qee.cloud.rpc.InvocationHandler;
 import org.qee.cloud.rpc.Invoker;
 import org.qee.cloud.rpc.Result;
@@ -14,18 +15,18 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
         Object resultValue = doInvoke(invocationHandler);
         CompletableFuture<Object> feture = wraper(resultValue);
 
-        CompletableFuture<AsynResult> resultCompletableFuture = feture.handle((obj, t) -> {
-            AsynResult asynResult = new AsynResult();
+        CompletableFuture<Response> resultCompletableFuture = feture.handle((obj, t) -> {
+            Response response = new Response();
             if (t != null) {
                 if (t instanceof CompletionException) {
-                    asynResult.setException(t.getCause());
+                    response.setData(t.getCause());
                 } else {
-                    asynResult.setException(t);
+                    response.setData(t);
                 }
             } else {
-                asynResult.setValue(obj);
+                response.setData(obj);
             }
-            return asynResult;
+            return response;
         });
 
         return new AsyncRpcResult(resultCompletableFuture, invocationHandler);

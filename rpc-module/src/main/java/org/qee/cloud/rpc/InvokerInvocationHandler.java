@@ -1,10 +1,14 @@
 package org.qee.cloud.rpc;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     private Invoker<T> invoker;
+
+    private String interfaceName;
 
     private String methodName;
 
@@ -13,6 +17,8 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
     private Object[] arguments;
 
     private Class<?> returnTypeClass;
+
+    private Map<String, Object> attachment = new HashMap<>();
 
     public InvokerInvocationHandler(Invoker<T> invoker, String methodName, Object[] arguments, Class<?> returnTypeClass) {
         this.invoker = invoker;
@@ -30,6 +36,14 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     public InvokerInvocationHandler(Invoker<T> invoker) {
         this.invoker = invoker;
+    }
+
+    public Map<String, Object> getAttachment() {
+        return attachment;
+    }
+
+    public String getInterfaceName() {
+        return interfaceName;
     }
 
     @Override

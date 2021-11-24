@@ -29,4 +29,9 @@ public class NettyChannel implements Channel {
     public void close() {
         channel.close();
     }
+
+    @Override
+    public void sent(Object msg) {
+        channel.writeAndFlush(msg);
+    }
 }
