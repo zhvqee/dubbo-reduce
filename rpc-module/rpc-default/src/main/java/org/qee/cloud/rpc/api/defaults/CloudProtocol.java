@@ -21,7 +21,6 @@ import org.qee.cloud.rpc.api.protocol.Protocol;
 import org.qee.cloud.rpc.api.protocol.export.Exporter;
 import org.qee.cloud.rpc.api.proxy.AsyncRpcResult;
 
-
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -101,7 +100,7 @@ public class CloudProtocol implements Protocol {
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker, URL url) {
         Exporter<T> exporter = new Exporter<>(invoker);
-        exportMap.put(url.getPath() + ":" + url.getParameter("group") + ":" + url.getParameter("version"), exporter);
+        exportMap.put(url.getPath() + ":" + url.getParameter("service.group") + ":" + url.getParameter("service.version"), exporter);
         return exporter;
     }
 
@@ -133,9 +132,9 @@ public class CloudProtocol implements Protocol {
     }
 
     private ExchangeClient[] getExchangeClients(URL url) {
-        Integer iothreads = Integer.parseInt(url.getParameter("connections"), 1);
-        ExchangeClient[] exchangeClient = new ExchangeClient[iothreads];
-        for (int i = 0; i < iothreads; i++) {
+        int connections = url.getParameter("connections", 1);
+        ExchangeClient[] exchangeClient = new ExchangeClient[connections];
+        for (int i = 0; i < connections; i++) {
             exchangeClient[i] = Exchangers.connect(url, exchangeHandler);
         }
         return exchangeClient;

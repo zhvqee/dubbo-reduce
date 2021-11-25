@@ -28,21 +28,49 @@ public class RegistryProtocol implements Protocol {
     @Override
     public <T> Invoker<T> refer(Class<T> refInterfaceClass, URL url) {
         Registry registry = registryFactory.getRegistry(url);
-        URL consumserUrl = getConsumerUrl(url);
+        URL consumserUrl = getConsumerUrl(url, refInterfaceClass);
         RegistryDirectory<T> directory = new RegistryDirectory<>(refInterfaceClass, consumserUrl, registry);
         directory.subscribe(consumserUrl);
         return cluster.join(directory);
     }
 
-    private URL getConsumerUrl(URL url) {
-        return URL.builder().protocol(url.getParameter("registry.protocol")).host(NetUtils.getLocalInetAddress().getHostName()).port(Integer.parseInt(url.getParameter("registry.port"))).build();
+    private <T> URL getConsumerUrl(URL url, Class<T> refInterfaceClass) {
+        URL consumerUrl = URL.builder().protocol(url.getParameter("service.registry.protocol"))
+                .host(NetUtils.getLocalInetAddress().getHostName()).port(Integer.parseInt(url.getParameter("service.registry.port")))
+                .path(refInterfaceClass.getName()).build();
+        consumerUrl.addParameter("service.group", url.getParameter("service.group", "*"));
+        consumerUrl.addParameter("service.version", url.getParameter("service.version", "*"));
+        return consumerUrl;
     }
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker, URL url) {
         Registry registry = registryFactory.getRegistry(url);
-        URL providerUrl = getConsumerUrl(url);
+        URL providerUrl = getProviderUrl(url, invoker);
         registry.register(providerUrl);
         return protocol.export(invoker, providerUrl);
+    }
+
+    private <T> URL getProviderUrl(URL url, Invoker<T> invoker) {
+        URL providerUrl = URL.builder().protocol(url.getParameter("service.registry.protocol"))
+                .host(NetUtils.getLocalInetAddress().getHostName())
+                .path(invoker.getInterface().getName())
+                .port(Integer.parseInt(url.getParameter("service.registry.port")))
+                .build();
+        providerUrl.addParameter("service.group", url.getParameter("service.group", "*"));
+        providerUrl.addParameter("service.version", url.getParameter("service.version", "*"));
+        return providerUrl;
+    }
+
+    public void setRegistryFactory(RegistryFactory registryFactory) {
+        this.registryFactory = registryFactory;
+    }
+
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
+    }
+
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
     }
 }

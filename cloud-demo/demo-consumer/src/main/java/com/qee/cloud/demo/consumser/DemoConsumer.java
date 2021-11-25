@@ -1,4 +1,4 @@
-package com.qee.cloud.demo.provider;
+package com.qee.cloud.demo.consumser;
 
 import org.qee.cloud.spring.annotations.EnableCloud;
 import org.springframework.boot.SpringApplication;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
-public class DemoProvider {
+public class DemoConsumer {
 
     @Configuration
     @ComponentScan(basePackages = "com.qee.cloud.demo")
@@ -17,8 +17,9 @@ public class DemoProvider {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoProvider.class, args);
-
+        SpringApplication.run(DemoConsumer.class, args);
+        UserServiceHolder userServiceHolder = BeanContext.getBean(UserServiceHolder.class);
+        userServiceHolder.print();
     }
 
 }

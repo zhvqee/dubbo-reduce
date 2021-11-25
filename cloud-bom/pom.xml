@@ -66,6 +66,12 @@
 
             <dependency>
                 <groupId>org.zhvqee</groupId>
+                <artifactId>remoting-netty4</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.zhvqee</groupId>
                 <artifactId>spring-module</artifactId>
                 <version>${revision}</version>
             </dependency>

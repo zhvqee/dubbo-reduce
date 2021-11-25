@@ -48,6 +48,11 @@ public class CloudServiceConfig<T> {
         URL registryUrl = registriesUrls.get(0);
         paramMap.put("registry", registryUrl.getProtocol());
         paramMap.put("protocol", "registry");
+        paramMap.put("service.registry.protocol", registryUrl.getParameter("service.registry.protocol"));
+        paramMap.put("service.registry.port", registryUrl.getParameter("service.registry.port"));
+        paramMap.put("service.group", group);
+        paramMap.put("service.version", version);
+
         registryUrl.addParameters(paramMap);
 
         Invoker<T> invoker = proxyFactory.getInvoker(ref, interfaceClass, registryUrl);

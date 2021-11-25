@@ -12,7 +12,7 @@ import org.qee.cloud.rpc.api.Invoker;
  * @Date: 2021/11/23 2:17 下午
  * @Version: 1.0
  */
-@SPI(name = "random")
+@SPI(name = "failfast")
 public interface Cluster {
 
     @Adaptive(keys = "cluster")

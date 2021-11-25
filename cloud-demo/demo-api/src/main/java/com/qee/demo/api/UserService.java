@@ -1,4 +1,4 @@
-package com.qee.cloud.demo.provider;
+package com.qee.demo.api;
 
 public interface UserService {
 

@@ -27,7 +27,7 @@ public class URL {
     }
 
     public String getInterfaceGroupVersion() {
-        return getParameter("interface");
+        return getPath() + ":" + this.getParameter("group", "*") + ":" + this.getParameter("version", "*");
     }
 
     public void addParameter(String key, String value) {
@@ -58,6 +58,11 @@ public class URL {
 
         public URLBuilder port(int port) {
             url.setPort(port);
+            return this;
+        }
+
+        public URLBuilder path(String path) {
+            url.setPath(path);
             return this;
         }
 

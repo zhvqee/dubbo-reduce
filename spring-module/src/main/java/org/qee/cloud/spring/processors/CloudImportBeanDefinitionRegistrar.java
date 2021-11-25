@@ -11,8 +11,6 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
-import javax.imageio.spi.RegisterableService;
-
 public class CloudImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
@@ -31,7 +29,10 @@ public class CloudImportBeanDefinitionRegistrar implements ImportBeanDefinitionR
 
         beanDefinitionRegistry.registerBeanDefinition("cloudReferenceBeanPostProcessor", referenceDefinition);
         String registryAddress = annotationAttributes.getString("registryAddress");
-        RegistryCenterService.addRegistryUrl(URL.valueOf(registryAddress));
+        URL url = URL.valueOf(registryAddress);
+        url.addParameter("service.registry.protocol", annotationAttributes.getString("serviceRegistryProtocol"));
+        url.addParameter("service.registry.port", annotationAttributes.get("serviceRegistryPort")+"");
+        RegistryCenterService.addRegistryUrl(url);
 
     }
 }

@@ -26,10 +26,20 @@ public class CuratorWatcherImpl implements CuratorWatcher {
 
     private CuratorFramework curatorFramework;
 
-    public CuratorWatcherImpl(String parentPath, List<URL> providerUrls, CuratorFramework curatorFramework) {
+    private URL consumerUrl;
+
+    public CuratorWatcherImpl(String parentPath, URL consumerUrl, List<URL> providerUrls, CuratorFramework curatorFramework) {
         this.parentPath = parentPath;
         this.providerUrls = providerUrls;
         this.curatorFramework = curatorFramework;
+        this.consumerUrl = consumerUrl;
+        List<String> childPaths = null;
+        try {
+            childPaths = curatorFramework.getChildren().usingWatcher(this).forPath(parentPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.providerUrls.addAll(toUrlsWithoutEmpty(consumerUrl, childPaths));
     }
 
     @Override
@@ -49,14 +59,19 @@ public class CuratorWatcherImpl implements CuratorWatcher {
 
     private List<URL> toUrlsWithoutEmpty(URL consumer, List<String> providers) {
         List<URL> urls = new ArrayList<>();
+        String groupVersion = parentPath.substring(parentPath.indexOf(":") + 1);
+        String[] gv = groupVersion.split(":");
         if (CollectionUtils.isNotEmpty(providers)) {
             for (String provider : providers) {
-               /* if (provider.contains(PROTOCOL_SEPARATOR_ENCODED)) {
-                    URL url = URLStrParser.parseEncodedStr(provider);
-                    if (UrlUtils.isMatch(consumer, url)) {
-                        urls.add(url);
-                    }
-                }*/
+                String[] split = provider.split(":");
+                URL provioderUrl = URL.builder().protocol(consumer.getProtocol())
+                        .path(consumer.getPath())
+                        .host(split[0])
+                        .port(Integer.parseInt(split[1]))
+                        .build();
+                provioderUrl.addParameter("service.group", gv[0]);
+                provioderUrl.addParameter("service.version", gv[1]);
+                urls.add(provioderUrl);
             }
         }
         return urls;

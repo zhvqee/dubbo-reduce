@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ZookeeperRegistry implements Registry {
 
-    public String ROOT = "/cloud/zookeeper/";
+    public String ROOT = "/cloud/zookeeper";
 
     private String PROVIDERS = "/providers";
 
@@ -55,7 +55,7 @@ public class ZookeeperRegistry implements Registry {
             Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
         }
         //org.qee.service.DemoService:*:*
-        String interfaceService = url.getPath();
+        String interfaceService = url.getInterfaceGroupVersion();
         String hostDomain = url.getHostDomain();
 
         try {
@@ -81,14 +81,14 @@ public class ZookeeperRegistry implements Registry {
         } catch (Exception e) {
             Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
         }
-        String interfaceService = url.getPath();
         String hostDomain = url.getHostDomain();
         String interfaceProviderVersion = url.getInterfaceGroupVersion();
 
         try {
             List<URL> providerList = new ArrayList<>();
-            recursiveCreateNode(ROOT + CONSUMERS + SEPARATOR + interfaceService + SEPARATOR + hostDomain, true);
-            curatorFramework.getChildren().usingWatcher(new CuratorWatcherImpl(ROOT + PROVIDERS, providerList, curatorFramework)).forPath(ROOT + PROVIDERS + interfaceProviderVersion);
+            recursiveCreateNode(ROOT + CONSUMERS + SEPARATOR + interfaceProviderVersion + SEPARATOR + hostDomain, true);
+            String parentPath = ROOT + PROVIDERS + SEPARATOR + interfaceProviderVersion;
+            curatorFramework.getChildren().usingWatcher(new CuratorWatcherImpl(parentPath, url,providerList, curatorFramework)).forPath(parentPath);
 
             // listener;
             if (listener != null) {

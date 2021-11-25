@@ -1,0 +1,4 @@
+
+#自适应，在程序中动态查询
+org.qee.cloud.common.annotations.Adaptive=random:com.qee.cloud.loadbalance.impls.RandomLoadBalance
+

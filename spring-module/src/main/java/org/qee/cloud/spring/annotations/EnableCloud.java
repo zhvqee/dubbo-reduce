@@ -18,4 +18,8 @@ public @interface EnableCloud {
     String[] scanPackages();
 
     String registryAddress();
+
+    int serviceRegistryPort() default 20888;
+
+    String serviceRegistryProtocol() default "cloud";
 }
