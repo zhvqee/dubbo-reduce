@@ -12,6 +12,7 @@
         <module name="registry-zookeeper" />
         <module name="serialization-jdk" />
         <module name="cluster-module" />
+        <module name="spring-module" />
         <module name="registry-api" />
         <module name="rpc-default" />
         <module name="remoting-netty4" />
@@ -20,8 +21,6 @@
         <module name="serialization-api" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="spring-module" target="8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8" />
   </component>
 </project>

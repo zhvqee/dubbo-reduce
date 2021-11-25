@@ -4,11 +4,12 @@
     <parent>
         <artifactId>qee-cloud</artifactId>
         <groupId>org.zhvqee</groupId>
-        <version>2.0</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-module</artifactId>
+    <version>${revision}</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -27,7 +28,11 @@
         </dependency>
         <dependency>
             <groupId>org.zhvqee</groupId>
-            <artifactId>org.qee.cloud.rpc-module</artifactId>
+            <artifactId>rpc-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>rpc-default</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -40,12 +45,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.alibaba.spring</groupId>
-            <artifactId>spring-context-support</artifactId>
         </dependency>
     </dependencies>
 

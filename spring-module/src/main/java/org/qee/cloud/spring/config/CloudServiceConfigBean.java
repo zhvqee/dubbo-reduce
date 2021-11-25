@@ -1,6 +1,6 @@
 package org.qee.cloud.spring.config;
 
-import org.qee.cloud.test.config.CloudServiceConfig;
+import org.qee.cloud.rpc.api.config.CloudServiceConfig;
 import org.springframework.beans.factory.InitializingBean;
 
 public class CloudServiceConfigBean<T> extends CloudServiceConfig<T> implements InitializingBean {

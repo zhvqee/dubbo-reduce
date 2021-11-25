@@ -1,6 +1,6 @@
 package org.qee.cloud.spring.config;
 
-import org.qee.cloud.test.config.CloudReferenceConfig;
+import org.qee.cloud.rpc.api.config.CloudReferenceConfig;
 import org.springframework.beans.factory.FactoryBean;
 
 public class CloudReferenceConfigBean<T>  extends CloudReferenceConfig<T> implements FactoryBean<T> {

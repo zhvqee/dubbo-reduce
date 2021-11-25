@@ -18,13 +18,7 @@
         <module>cluster-module</module>
         <module>registry-module</module>
         <module>rpc-module</module>
-        <!--
-
-               <module>org.qee.cloud.rpc-module</module>
-               <module>serialization-module/serialization-jdk</module>
-
-               <module>spring-module</module>
- -->
+        <module>spring-module</module>
     </modules>
 
     <dependencyManagement>
@@ -50,6 +44,11 @@
             <dependency>
                 <artifactId>rpc-api</artifactId>
                 <groupId>org.zhvqee</groupId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zhvqee</groupId>
+                <artifactId>rpc-default</artifactId>
                 <version>${revision}</version>
             </dependency>
 
