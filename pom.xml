@@ -21,8 +21,6 @@
         <module>spring-module</module>
         <module>cloud-bom</module>
         <module>cloud-demo</module>
-        <module>cloud-demo/demo-consumer</module>
-        <module>cloud-demo/demo-provider</module>
     </modules>
 
     <dependencyManagement>
