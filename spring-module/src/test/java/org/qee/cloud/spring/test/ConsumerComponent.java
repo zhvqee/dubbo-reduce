@@ -1,6 +1,6 @@
 package org.qee.cloud.spring.test;
 
-import org.qee.cloud.rpc.annotation.CloudReference;
+import org.qee.cloud.test.annotation.CloudReference;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -12,14 +12,19 @@
         <org.projectlombok.version>1.16.18</org.projectlombok.version>
     </properties>
     <modules>
+        <module>common-module</module>
         <module>serialization-module</module>
         <module>remoting-module</module>
-        <module>common-module</module>
-        <module>rpc-module</module>
-        <module>serialization-module/serialization-jdk</module>
-        <module>registry-module</module>
-        <module>spring-module</module>
         <module>cluster-module</module>
+        <module>registry-module</module>
+        <module>rpc-module</module>
+        <!--
+
+               <module>org.qee.cloud.rpc-module</module>
+               <module>serialization-module/serialization-jdk</module>
+
+               <module>spring-module</module>
+ -->
     </modules>
 
     <dependencyManagement>
@@ -38,7 +43,13 @@
 
             <dependency>
                 <groupId>org.zhvqee</groupId>
-                <artifactId>rpc-module</artifactId>
+                <artifactId>serialization-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>rpc-api</artifactId>
+                <groupId>org.zhvqee</groupId>
                 <version>${revision}</version>
             </dependency>
 
@@ -102,18 +113,5 @@
 
     </dependencyManagement>
 
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

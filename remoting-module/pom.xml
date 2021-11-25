@@ -13,14 +13,14 @@
     <artifactId>remoting-module</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
     <modules>
         <module>remoting-api</module>
         <module>remoting-netty4</module>
     </modules>
-
-    <dependencies>
-
-    </dependencies>
-
 
 </project>

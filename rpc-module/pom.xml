@@ -5,40 +5,20 @@
     <parent>
         <artifactId>qee-cloud</artifactId>
         <groupId>org.zhvqee</groupId>
-        <version>2.0</version>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rpc-module</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>rpc-api</module>
+        <module>rpc-default</module>
+    </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>4.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.zhvqee</groupId>
-            <artifactId>common-module</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.zhvqee</groupId>
-            <artifactId>cluster-module</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.zhvqee</groupId>
-            <artifactId>registry-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.zhvqee</groupId>
-            <artifactId>remoting-api</artifactId>
-        </dependency>
-    </dependencies>
-
-
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 </project>

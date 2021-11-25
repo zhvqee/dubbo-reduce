@@ -2,7 +2,7 @@ package com.qee.cloud.cluster;
 
 import org.qee.cloud.common.annotations.Adaptive;
 import org.qee.cloud.common.annotations.SPI;
-import org.qee.cloud.rpc.Invoker;
+import org.qee.cloud.rpc.api.Invoker;
 
 /**
  * @ProjectName: qee-cloud

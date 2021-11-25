@@ -4,25 +4,29 @@
     <parent>
         <artifactId>registry-module</artifactId>
         <groupId>org.zhvqee</groupId>
-        <version>2.0</version>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>registry-api</artifactId>
     <version>${revision}</version>
+    <packaging>jar</packaging>
+
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+
     <dependencies>
         <dependency>
-            <artifactId>common-module</artifactId>
+            <artifactId>cluster-module</artifactId>
             <groupId>org.zhvqee</groupId>
         </dependency>
         <dependency>
-            <artifactId>cluster-module</artifactId>
+            <artifactId>common-module</artifactId>
             <groupId>org.zhvqee</groupId>
         </dependency>
     </dependencies>

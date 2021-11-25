@@ -15,6 +15,7 @@
     <modules>
         <module>serialization-api</module>
         <module>serialzation-hessian2</module>
+        <module>serialization-jdk</module>
     </modules>
 
 </project>

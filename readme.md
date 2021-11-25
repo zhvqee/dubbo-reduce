@@ -43,5 +43,9 @@ org.qee.cloud.common.annotations.AutoWraper=org.qee.cloud.common.extentions.obje
 
 2、@CloudService 类比 @DubboService 1）实现类似 spring @Service 的 功能， 2）注册服务到注册中心
 
+
+## 工程依赖
+
+
 ## 使用手册
  

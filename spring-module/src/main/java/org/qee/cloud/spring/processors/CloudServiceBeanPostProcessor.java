@@ -2,7 +2,7 @@ package org.qee.cloud.spring.processors;
 
 import org.qee.cloud.common.exceptions.ExportException;
 import org.qee.cloud.common.utils.Throws;
-import org.qee.cloud.rpc.annotation.CloudService;
+import org.qee.cloud.test.annotation.CloudService;
 import org.qee.cloud.spring.config.CloudServiceConfigBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanClassLoaderAware;

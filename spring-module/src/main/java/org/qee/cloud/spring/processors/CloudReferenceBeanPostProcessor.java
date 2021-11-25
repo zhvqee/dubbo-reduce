@@ -3,7 +3,7 @@ package org.qee.cloud.spring.processors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.qee.cloud.common.exceptions.InjectException;
 import org.qee.cloud.common.utils.Throws;
-import org.qee.cloud.rpc.annotation.CloudReference;
+import org.qee.cloud.test.annotation.CloudReference;
 import org.qee.cloud.spring.config.CloudReferenceConfigBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
