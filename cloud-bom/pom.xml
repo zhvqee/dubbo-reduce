@@ -1,30 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>qee-cloud</artifactId>
+        <groupId>org.zhvqee</groupId>
+        <version>${revision}</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.zhvqee</groupId>
-    <artifactId>qee-cloud</artifactId>
-    <packaging>pom</packaging>
-    <version>${revision}</version>
-    <properties>
-        <revision>2.0</revision>
-        <org.projectlombok.version>1.16.18</org.projectlombok.version>
-    </properties>
-    <modules>
-        <module>common-module</module>
-        <module>serialization-module</module>
-        <module>remoting-module</module>
-        <module>cluster-module</module>
-        <module>registry-module</module>
-        <module>rpc-module</module>
-        <module>spring-module</module>
-        <module>cloud-bom</module>
-        <module>cloud-demo</module>
-        <module>cloud-demo/demo-consumer</module>
-        <module>cloud-demo/demo-provider</module>
-    </modules>
-
+    <artifactId>cloud-bom</artifactId>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -67,10 +52,21 @@
                 <artifactId>registry-api</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>org.zhvqee</groupId>
+                <artifactId>registry-zookeeper</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.zhvqee</groupId>
                 <artifactId>remoting-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.zhvqee</groupId>
+                <artifactId>spring-module</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -115,6 +111,5 @@
         </dependencies>
 
     </dependencyManagement>
-
 
 </project>

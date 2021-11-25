@@ -1,4 +1,4 @@
-package org.qee.cloud.spring.test;
+package com.qee.cloud.demo.provider;
 
 
 import org.qee.cloud.rpc.api.annotation.CloudService;
