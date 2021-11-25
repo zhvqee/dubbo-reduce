@@ -11,7 +11,7 @@ public class EnableCloudTest {
 
     @Configuration
     @ComponentScan(basePackages = "org.qee.cloud")
-    @EnableCloud(scanPackages = "org.qee.cloud")
+    @EnableCloud(scanPackages = "org.qee.cloud",registryAddress = "zookeeper://127.0.0.1:2181")
     static class Config {
     }
 

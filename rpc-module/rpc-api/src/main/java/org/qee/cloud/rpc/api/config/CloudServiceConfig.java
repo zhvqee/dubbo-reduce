@@ -2,6 +2,7 @@ package org.qee.cloud.rpc.api.config;
 
 
 import lombok.Data;
+import org.qee.cloud.common.extentions.ExtensionLoader;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.rpc.api.Invoker;
 import org.qee.cloud.rpc.api.RegistryCenterService;
@@ -29,9 +30,9 @@ public class CloudServiceConfig<T> {
 
     private boolean exported;
 
-    private ProxyFactory proxyFactory;
+    private ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
 
-    private Protocol protocol;
+    private Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
     private List<Exporter<T>> exporters = new ArrayList<>();
 
     //导出服务
@@ -45,7 +46,10 @@ public class CloudServiceConfig<T> {
         //目前先实现一个注册中心
         // TODO: 2021/11/23
         URL registryUrl = registriesUrls.get(0);
+        paramMap.put("registry", registryUrl.getProtocol());
+        paramMap.put("protocol", "registry");
         registryUrl.addParameters(paramMap);
+
         Invoker<T> invoker = proxyFactory.getInvoker(ref, interfaceClass, registryUrl);
         Exporter<T> export = protocol.export(invoker, registryUrl);
         exporters.add(export);

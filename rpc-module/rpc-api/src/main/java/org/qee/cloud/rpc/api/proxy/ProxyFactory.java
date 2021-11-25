@@ -21,7 +21,7 @@ public interface ProxyFactory {
      * @param <T>
      * @return
      */
-    @Adaptive(keys = "buddy")
+    @Adaptive(keys = "proxy")
     <T> T getProxy(Invoker<T> invoker);
 
     /**
@@ -32,5 +32,6 @@ public interface ProxyFactory {
      * @param <T>
      * @return
      */
+    @Adaptive(keys = "proxy")
     <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url);
 }

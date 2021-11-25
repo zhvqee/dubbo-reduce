@@ -54,6 +54,10 @@
             <groupId>org.zhvqee</groupId>
             <artifactId>registry-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>registry-zookeeper</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.zhvqee</groupId>
@@ -106,6 +110,8 @@
 
     <dependencyManagement>
         <dependencies>
+
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>

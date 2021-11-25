@@ -16,4 +16,6 @@ import java.lang.annotation.Target;
 public @interface EnableCloud {
 
     String[] scanPackages();
+
+    String registryAddress();
 }

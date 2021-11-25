@@ -364,7 +364,8 @@ public class ExtensionLoader<T> {
             Adaptive annotation = method.getAnnotation(Adaptive.class);
             String[] keys = annotation.keys();
             URL url = (URL) param;
-            String name = Arrays.stream(keys).filter(key -> url.getParameter(key) != null).findFirst().orElse(defaultName);
+
+            String name = Arrays.stream(keys).filter(key -> url.getParameter(key) != null).map(url::getParameter).findFirst().orElse(defaultName);
             Object extension = ExtensionLoader.getExtensionLoader(classRef).getExtension(name);
             return method.invoke(extension, args);
         }
