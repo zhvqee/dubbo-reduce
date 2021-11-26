@@ -2,6 +2,7 @@ package com.qee.cloud.cluster;
 
 
 
+import org.qee.cloud.common.model.URL;
 import org.qee.cloud.rpc.api.InvocationHandler;
 import org.qee.cloud.rpc.api.Invoker;
 
@@ -16,6 +17,8 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface Directory<T> {
+
+    URL getConsumerUrl();
 
     Class<T> getInterface();
 
