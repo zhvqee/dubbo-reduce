@@ -78,10 +78,6 @@ public class CloudProtocol implements Protocol {
             return null;
         }
 
-        @Override
-        public void sent(Channel channel, Object message) throws RemotingException {
-            channel.sent(message);
-        }
 
         @Override
         public void received(Channel channel, Object message) throws RemotingException {
@@ -105,6 +101,7 @@ public class CloudProtocol implements Protocol {
         ExchangeServer exchangeServer = openServer(url);
         Exporter<T> exporter = new Exporter<>(invoker, exchangeServer);
         exportMap.put(url.getPath() + ":" + url.getParameter("service.group") + ":" + url.getParameter("service.version"), exporter);
+        exchangeServerMap.put(url.getPath() + ":" + url.getParameter("service.group") + ":" + url.getParameter("service.version"), exchangeServer);
         return exporter;
     }
 
