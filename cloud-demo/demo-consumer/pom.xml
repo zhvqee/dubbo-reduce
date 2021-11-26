@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>qee-cloud</artifactId>
+        <artifactId>cloud-demo</artifactId>
         <groupId>org.zhvqee</groupId>
         <version>${revision}</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
+     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>demo-consumer</artifactId>
+    <version>${revision}</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -30,6 +30,11 @@
         <dependency>
             <groupId>org.zhvqee</groupId>
             <artifactId>serialization-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>serialization-hessian2</artifactId>
         </dependency>
 
         <dependency>

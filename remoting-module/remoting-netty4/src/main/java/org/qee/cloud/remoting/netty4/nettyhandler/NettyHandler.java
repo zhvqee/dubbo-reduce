@@ -45,6 +45,7 @@ public class NettyHandler extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         channelHandler.sent(NettyChannel.getOrAddChannel(ctx.channel()), msg);
+        ctx.write(msg);
     }
 
 

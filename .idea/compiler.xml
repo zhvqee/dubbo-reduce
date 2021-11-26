@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="rpc-default" />
         <module name="serialization-api" />
-        <module name="serialzation-hessian2" />
         <module name="remoting-api" />
         <module name="common-module" />
         <module name="remoting-netty4" />
@@ -22,6 +21,7 @@
         <module name="cluster-module" />
         <module name="spring-module" />
         <module name="rpc-api" />
+        <module name="serialization-hessian2" />
         <module name="registry-api" />
       </profile>
     </annotationProcessing>
