@@ -8,6 +8,7 @@ public class Throws {
         try {
             throw clzz.getDeclaredConstructor(String.class).newInstance(errMsg);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new SpiExtensionException(errMsg);
         }
     }

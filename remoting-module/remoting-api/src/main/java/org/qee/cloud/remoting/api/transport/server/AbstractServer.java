@@ -127,6 +127,7 @@ public abstract class AbstractServer extends AbstractEndPoint implements Remotin
         // 连接不是无限制的，业务框架上的限制，netty本身和系统也有其限制
         Collection<Channel> alreadyClientChannels = getAlreadyClientChannels();
         if (accepts > 0 && alreadyClientChannels.size() >= accepts) {
+            System.out.println("123232");
             close();
             return;
         }
@@ -136,7 +137,6 @@ public abstract class AbstractServer extends AbstractEndPoint implements Remotin
 
     @Override
     public void disconnected(Channel channel) throws RemotingException {
-        this.close();
         channelHandler.connected(channel);
     }
 

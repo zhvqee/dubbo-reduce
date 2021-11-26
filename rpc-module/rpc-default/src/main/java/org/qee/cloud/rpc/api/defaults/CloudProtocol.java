@@ -9,6 +9,7 @@ import org.qee.cloud.remoting.api.channel.DefaultFuture;
 import org.qee.cloud.remoting.api.exchange.ExchangeClient;
 import org.qee.cloud.remoting.api.exchange.ExchangeHandler;
 import org.qee.cloud.remoting.api.exchange.ExchangeHandlerAdapter;
+import org.qee.cloud.remoting.api.exchange.ExchangeServer;
 import org.qee.cloud.remoting.api.exchange.Exchangers;
 import org.qee.cloud.remoting.api.exchange.request.Request;
 import org.qee.cloud.remoting.api.exchange.response.Response;
@@ -31,6 +32,8 @@ public class CloudProtocol implements Protocol {
 
 
     private Map<String, Exporter<?>> exportMap = new ConcurrentHashMap<>();
+
+    private Map<String, ExchangeServer> exchangeServerMap = new ConcurrentHashMap<>();
 
     private ExchangeHandler exchangeHandler = new ExchangeHandlerAdapter() {
         @Override
@@ -99,9 +102,15 @@ public class CloudProtocol implements Protocol {
 
     @Override
     public <T> Exporter<T> export(Invoker<T> invoker, URL url) {
-        Exporter<T> exporter = new Exporter<>(invoker);
+        ExchangeServer exchangeServer = openServer(url);
+        Exporter<T> exporter = new Exporter<>(invoker, exchangeServer);
         exportMap.put(url.getPath() + ":" + url.getParameter("service.group") + ":" + url.getParameter("service.version"), exporter);
         return exporter;
+    }
+
+    private ExchangeServer openServer(URL url) {
+        return Exchangers.bind(url, exchangeHandler);
+
     }
 
     private <T> Invoker<T> getInvoker(Class<T> refInterfaceClass, ExchangeClient[] exchangeClients, URL providerUrl) {

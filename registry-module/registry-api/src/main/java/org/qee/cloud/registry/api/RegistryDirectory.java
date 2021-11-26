@@ -45,6 +45,11 @@ public class RegistryDirectory<T> implements Directory<T>, NotifyListener {
     }
 
     @Override
+    public URL getConsumerUrl() {
+        return consumerUrl;
+    }
+
+    @Override
     public Class<T> getInterface() {
         return interfaceClass;
     }

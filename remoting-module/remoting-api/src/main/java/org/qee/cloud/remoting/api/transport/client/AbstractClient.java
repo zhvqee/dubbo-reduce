@@ -2,15 +2,19 @@ package org.qee.cloud.remoting.api.transport.client;
 
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
+import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
 import org.qee.cloud.remoting.api.transport.AbstractEndPoint;
 
 public abstract class AbstractClient extends AbstractEndPoint implements Client {
 
-    public AbstractClient(URL url) {
+    protected ChannelHandler channelHandler;
+
+    public AbstractClient(URL url, ChannelHandler channelHandler) {
         super(url);
-        try{
+        this.channelHandler = channelHandler;
+        try {
             doOpen();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 

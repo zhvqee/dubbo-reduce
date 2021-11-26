@@ -21,26 +21,27 @@ public class ExchangeHandlerAdapter implements ExchangeHandler {
 
     @Override
     public void connected(Channel channel) throws RemotingException {
+        System.out.println("客户端链接" + channel.toString());
 
     }
 
     @Override
     public void disconnected(Channel channel) throws RemotingException {
-
+        System.out.println("客户端断开链接" + channel.toString());
     }
 
     @Override
     public void sent(Channel channel, Object message) throws RemotingException {
-
+        System.out.println("发送数据" + channel.toString());
     }
 
     @Override
     public void received(Channel channel, Object message) throws RemotingException {
-
+        System.out.println("接收数据" + channel.toString());
     }
 
     @Override
     public void caught(Channel channel, Throwable exception) throws RemotingException {
-
+        System.out.println("异常：" + exception);
     }
 }

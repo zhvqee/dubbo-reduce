@@ -36,7 +36,6 @@ public class Netty4Client extends AbstractClient {
 
     private io.netty.channel.Channel channel;
 
-    private ChannelHandler channelHandler;
 
     /**
      * 这里维护 该应用下所有的服务端连接
@@ -58,13 +57,8 @@ public class Netty4Client extends AbstractClient {
 
 
     public Netty4Client(URL url, ChannelHandler channelHandler) {
-        super(url);
-        this.channelHandler = channelHandler;
-        try {
-            doConnect();
-        } catch (InterruptedException e) {
-            Throws.throwException(RemotingException.class, "远程连接失败,providerUrl:" + url);
-        }
+        super(url, channelHandler);
+
     }
 
     @Override
@@ -76,6 +70,7 @@ public class Netty4Client extends AbstractClient {
     public CompletableFuture<Response> request(Request request) {
         ChannelFuture channelFuture = channel.writeAndFlush(request);
         if (channelFuture.cause() != null) {
+            System.out.println(channelFuture.cause());
             Throws.throwException(RemotingException.class, "远程异常");
         }
         return DefaultFuture.newFuture(NettyChannel.getOrAddChannel(channel), request);
@@ -91,6 +86,7 @@ public class Netty4Client extends AbstractClient {
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                // .option(ChannelOption.SO_REUSEADDR, true)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, Math.max(3000, getConnectTimeout()))
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -107,16 +103,20 @@ public class Netty4Client extends AbstractClient {
 
     @Override
     protected void doConnect() throws InterruptedException {
-        ChannelFuture channelFuture = bootstrap.connect(getUrl().getHost(), getUrl().getPort());
-        boolean uninterruptibly = channelFuture.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
-        if (uninterruptibly && channelFuture.isSuccess()) {
-            if (Netty4Client.this.channel != null) {
-                Netty4Client.this.channel.close();
-            }
-            this.channel = channelFuture.channel();
+        while (true) {
+            ChannelFuture channelFuture = bootstrap.connect(getUrl().getHost(), getUrl().getPort());
+            boolean uninterruptibly = channelFuture.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
+            if (uninterruptibly && channelFuture.isSuccess()) {
+                if (Netty4Client.this.channel != null) {
+                    Netty4Client.this.channel.close();
+                }
+                this.channel = channelFuture.channel();
+                break;
 
-        } else {
-            Throws.throwException(RemotingException.class, "远程连接异常,providerUrl：" + getUrl());
+            } else {
+                //  Throws.throwException(RemotingException.class, "远程连接异常,providerUrl：" + getUrl());
+            }
+            Thread.sleep(100);
         }
 
     }

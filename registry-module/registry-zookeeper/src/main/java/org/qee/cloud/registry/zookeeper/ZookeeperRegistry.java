@@ -88,7 +88,7 @@ public class ZookeeperRegistry implements Registry {
             List<URL> providerList = new ArrayList<>();
             recursiveCreateNode(ROOT + CONSUMERS + SEPARATOR + interfaceProviderVersion + SEPARATOR + hostDomain, true);
             String parentPath = ROOT + PROVIDERS + SEPARATOR + interfaceProviderVersion;
-            curatorFramework.getChildren().usingWatcher(new CuratorWatcherImpl(parentPath, url,providerList, curatorFramework)).forPath(parentPath);
+            curatorFramework.getChildren().usingWatcher(new CuratorWatcherImpl(parentPath, url, providerList, curatorFramework)).forPath(parentPath);
 
             // listener;
             if (listener != null) {
@@ -126,6 +126,7 @@ public class ZookeeperRegistry implements Registry {
         }
         if (curatorFramework.checkExists().forPath(path) == null) {
             curatorFramework.create().withMode(createMode).forPath(path);
+            System.out.println("注册节点:" + path);
         }
         if (!ephemeral) {
             persistentExistNodePath.put(path, NULL_OBJECT);

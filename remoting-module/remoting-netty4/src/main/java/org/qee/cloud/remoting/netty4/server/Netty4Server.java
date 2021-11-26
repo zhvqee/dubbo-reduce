@@ -2,13 +2,15 @@ package org.qee.cloud.remoting.netty4.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
@@ -59,11 +61,19 @@ public class Netty4Server extends AbstractServer {
         clientChannelMap = new ConcurrentHashMap<>();
         NettyHandler nettyServerHandler = new NettyHandler(Netty4Server.this, clientChannelMap);
 
-        serverBootstrap.channel(NioServerSocketChannel.class)
-                .group(boss, worker)
-                .option(ChannelOption.SO_REUSEADDR, Boolean.TRUE)
-                .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+
+        serverBootstrap.option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.SO_REUSEADDR, true)
+                .childOption(ChannelOption.SO_RCVBUF, 32 * 1024)
+                .childOption(ChannelOption.SO_SNDBUF, 32 * 1024)
+                .childOption(EpollChannelOption.SO_REUSEPORT, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+
+        serverBootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
+                .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -75,21 +85,24 @@ public class Netty4Server extends AbstractServer {
                                 .addLast("handler", nettyServerHandler);
                     }
                 });
-        ChannelFuture channelFuture = serverBootstrap.bind(getBindAddress());
-        channelFuture.syncUninterruptibly();
-        channel = channelFuture.channel();
+
+        channel = serverBootstrap.bind(getUrl().getPort()).syncUninterruptibly().channel();
+        // channel.closeFuture().sync();
     }
 
     @Override
     public void doClose() throws Throwable {
         if (channel != null) {
             channel.close();
+            System.out.println("close");
         }
         if (boss != null) {
             boss.shutdownGracefully();
+            System.out.println("close");
         }
         if (worker != null) {
             worker.shutdownGracefully();
+            System.out.println("close");
         }
         clientChannelMap.clear();
     }

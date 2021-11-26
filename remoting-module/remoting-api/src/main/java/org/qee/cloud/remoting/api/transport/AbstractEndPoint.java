@@ -3,6 +3,7 @@ package org.qee.cloud.remoting.api.transport;
 import org.qee.cloud.common.extentions.ExtensionLoader;
 import org.qee.cloud.common.model.URL;
 import org.qee.cloud.remoting.api.codec.Codec;
+import org.qee.cloud.remoting.api.exchange.codec.ExchangeCodec;
 
 import static org.qee.cloud.common.constants.CommonConstants.*;
 
@@ -27,8 +28,7 @@ public abstract class AbstractEndPoint extends AbstractPeer {
     }
 
     protected Codec getChannelCodec(URL url) {
-        String codec = url.getParameter(CODEC_KEY, CODEC_DEFAULT);
-        return ExtensionLoader.getExtensionLoader(Codec.class).getExtension(codec);
+        return new ExchangeCodec();
     }
 
     //Getter 属性

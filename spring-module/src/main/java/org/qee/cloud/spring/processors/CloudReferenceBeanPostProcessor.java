@@ -61,6 +61,7 @@ public class CloudReferenceBeanPostProcessor extends InstantiationAwareBeanPostP
                 metadata.inject(bean, beanName, pvs);
             }
         } catch (Throwable throwable) {
+            throwable.printStackTrace();
             Throws.throwException(InjectException.class, throwable.getMessage());
         }
         return pvs;
