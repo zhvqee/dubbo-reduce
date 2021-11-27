@@ -1,6 +1,6 @@
 package org.qee.cloud.rpc.api;
 
-import java.util.Arrays;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +10,7 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     private String interfaceName;
 
-    private String methodName;
+    private Method method;
 
     private Class<?>[] parameterTypes;
 
@@ -20,18 +20,18 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     private Map<String, Object> attachment = new HashMap<>();
 
-    public InvokerInvocationHandler(Invoker<T> invoker, String methodName, Object[] arguments, Class<?> returnTypeClass) {
+    public InvokerInvocationHandler(Invoker<T> invoker, Method method, Object[] arguments, Class<?> returnTypeClass) {
         this.invoker = invoker;
-        this.methodName = methodName;
+        this.method = method;
         this.arguments = arguments;
-        Class<?>[] clzzArr = null;
-        if (arguments == null || arguments.length == 0) {
-            clzzArr = new Class[0];
-        } else {
-            clzzArr = Arrays.stream(arguments).map(Object::getClass).toArray(Class[]::new);
+        int parameterCount = method.getParameterCount();
+        if (parameterCount > 0) {
+            setParameterTypes(method.getParameterTypes());
         }
-        setParameterTypes(clzzArr);
         this.returnTypeClass = returnTypeClass;
+        this.interfaceName = invoker.getInterface().getName();
+        attachment.put("service.group", invoker.getUrl().getParameter("service.group"));
+        attachment.put("service.version", invoker.getUrl().getParameter("service.version"));
     }
 
     public InvokerInvocationHandler(Invoker<T> invoker) {
@@ -48,7 +48,7 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
 
     @Override
     public String getMethodName() {
-        return methodName;
+        return method.getName();
     }
 
     @Override
@@ -62,20 +62,13 @@ public class InvokerInvocationHandler<T> implements InvocationHandler {
     }
 
     @Override
-    public Class<?> getReturnType() {
-        return returnTypeClass;
+    public Map<String, Object> getAttachments() {
+        return attachment;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
 
     public void setParameterTypes(Class<?>[] parameterTypes) {
         this.parameterTypes = parameterTypes;
-    }
-
-    public void setArguments(Object[] arguments) {
-        this.arguments = arguments;
     }
 
     /**

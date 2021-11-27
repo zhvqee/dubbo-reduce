@@ -34,6 +34,11 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
         return new AbstractProxyInvoker<T>() {
 
             @Override
+            public URL getUrl() {
+                return url;
+            }
+
+            @Override
             public Class<T> getInterface() {
                 return type;
             }
@@ -45,7 +50,8 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
                     method.setAccessible(true);
                     return method.invoke(proxy, invocationHandler.getArguments());
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-
+                    e.printStackTrace();
+                    System.out.println(e);
                 }
                 return null;
             }

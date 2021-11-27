@@ -63,6 +63,7 @@ public class ZookeeperRegistry implements Registry {
         } catch (Exception e) {
             Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
         }
+
     }
 
 

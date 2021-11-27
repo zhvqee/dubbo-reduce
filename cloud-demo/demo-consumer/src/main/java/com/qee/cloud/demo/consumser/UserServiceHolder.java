@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserServiceHolder {
-    @CloudReference(id="userService",group="*",version = "*",check=false)
+    @CloudReference(id = "userService", group = "*", version = "*", check = false)
     private UserService userService;
 
-    public void print() {
-        String user = userService.getUser(1L);
+    public void print(int i) {
+        String user = userService.getUser(i);
         System.out.println(user);
     }
 

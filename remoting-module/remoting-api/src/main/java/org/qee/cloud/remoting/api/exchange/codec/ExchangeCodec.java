@@ -104,7 +104,7 @@ public class ExchangeCodec implements Codec {
             long id = ByteUtils.byte2Long(header, 4);
             Response response = new Response();
             response.setId(id);
-            response.setStatus(header[3]);
+            response.setStatus(ByteUtils.readByte(header, 3));
 
             Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
             ChannelBufferInputStream inputStream = new ChannelBufferInputStream(buffer);
@@ -130,6 +130,8 @@ public class ExchangeCodec implements Codec {
 
         // encode request data.
         int savedWriteIndex = buffer.writerIndex();
+
+
         buffer.writerIndex(savedWriteIndex + HEADER_LENGTH);
         ChannelBufferOutputStream outputStream = new ChannelBufferOutputStream(buffer);
         ObjectOutput objectOutput = serialization.serialize(outputStream);
@@ -140,7 +142,7 @@ public class ExchangeCodec implements Codec {
         outputStream.close();
         checkPayload(writtenBytes);
 
-        ByteUtils.writeInt(header, 12, writtenBytes);
+        ByteUtils.writeInt(header, 12, writtenBytes); //这里为总长度
 
         buffer.writerIndex(savedWriteIndex);
         outputStream.write(header);
@@ -155,24 +157,24 @@ public class ExchangeCodec implements Codec {
         byte[] header = new byte[HEADER_LENGTH];
 
         ByteUtils.writeShort(header, 0, MAGIC);
-        header[3] = (byte) response.getStatus();
+        ByteUtils.writeByte(header, 3, response.getStatus());
         ByteUtils.writeLong(header, 4, response.getId());
 
         Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getDefaultExtension();
 
-        int readerIndex = buffer.readerIndex();
-        buffer.readerIndex(readerIndex + HEADER_LENGTH);
+        buffer.writerIndex(HEADER_LENGTH);
         ChannelBufferOutputStream outputStream = new ChannelBufferOutputStream(buffer);
         ObjectOutput objectOutput = serialization.serialize(outputStream);
         objectOutput.writeObject(response.getData());
-        int writtenBytes = outputStream.getWrittenBytes();
+        objectOutput.flushBuffer();
         outputStream.flush();
-        outputStream.close();
+        int writtenBytes = outputStream.getWrittenBytes();
         ByteUtils.writeInt(header, 12, writtenBytes);
 
-        buffer.writerIndex(readerIndex);
+        buffer.writerIndex(0);
         outputStream.write(header);
-        buffer.writerIndex(readerIndex + HEADER_LENGTH + writtenBytes);
+        outputStream.flush();
+        buffer.writerIndex(HEADER_LENGTH + writtenBytes);
     }
 
 

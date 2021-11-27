@@ -2,7 +2,6 @@ package org.qee.cloud.rpc.api.defaults;
 
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.MethodReturnUtils;
 import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.remoting.api.channel.Channel;
 import org.qee.cloud.remoting.api.channel.DefaultFuture;
@@ -16,13 +15,13 @@ import org.qee.cloud.remoting.api.exchange.response.Response;
 import org.qee.cloud.rpc.api.AsyncToSyncInvoker;
 import org.qee.cloud.rpc.api.InvocationHandler;
 import org.qee.cloud.rpc.api.Invoker;
-import org.qee.cloud.rpc.api.InvokerInvocationHandler;
 import org.qee.cloud.rpc.api.Result;
+import org.qee.cloud.rpc.api.RpcInvocationHandler;
 import org.qee.cloud.rpc.api.protocol.Protocol;
 import org.qee.cloud.rpc.api.protocol.export.Exporter;
 import org.qee.cloud.rpc.api.proxy.AsyncRpcResult;
+import org.qee.cloud.rpc.api.utils.ReflectUtils;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,37 +39,43 @@ public class CloudProtocol implements Protocol {
         public CompletableFuture<Object> reply(Channel channel, Object msg) throws RemotingException {
             if (msg instanceof Request) {//服务端收到请求
                 Request request = (Request) msg;
-                if (request.getData() instanceof InvokerInvocationHandler) {
-                    InvokerInvocationHandler invocationHandler = (InvokerInvocationHandler) request.getData();
+                if (request.getData() instanceof RpcInvocationHandler) {
+                    RpcInvocationHandler invocationHandler = (RpcInvocationHandler) request.getData();
                     String interfaceName = invocationHandler.getInterfaceName();
-                    String version = (String) invocationHandler.getAttachment().get("version");
-                    String group = (String) invocationHandler.getAttachment().get("group");
+                    String version = (String) invocationHandler.getAttachment().get("service.version");
+                    String group = (String) invocationHandler.getAttachment().get("service.group");
                     Exporter<?> exporter = exportMap.get(interfaceName + ":" + group + ":" + version);
                     if (exporter == null || exporter.getInvoker() == null) {
                         Throws.throwException(RemotingException.class, "远程解析错误");
                     }
                     Invoker<?> invoker = exporter.getInvoker();
-                    Result result = invoker.invoke(invocationHandler);
+                    String parameterTypesDesc = invocationHandler.getParameterTypesDesc();
                     try {
-                        Method method = invoker.getInterface().getMethod(invocationHandler.getMethodName(), invocationHandler.getParameterTypes());
-                        boolean voidReturn = MethodReturnUtils.isVoidReturn(method);
-                        if (!voidReturn) {
-
-                            Response response = new Response();
-                            response.setId(request.getId());
-                            if (result.getException() != null) {
-                                response.setData(result.getException());
-                                response.setStatus(Response.SERVER_ERR);
-                            } else {
-                                response.setData(result.getValue());
-                                response.setStatus(Response.OK);
+                        if (parameterTypesDesc != null && parameterTypesDesc.length() > 0) {
+                            String[] parameterTypesDescs = parameterTypesDesc.split(";");
+                            Class<?>[] classArr = new Class[parameterTypesDescs.length];
+                            int i = 0;
+                            for (String pt : parameterTypesDescs) {
+                                classArr[i++] = ReflectUtils.getClass(pt);
                             }
-                            channel.sent(response);
+                            invocationHandler.setParameterTypes(classArr);
                         }
-                    } catch (NoSuchMethodException e) {
-                        Throws.throwException(RemotingException.class, "远程异常");
+
+                        Result result = invoker.invoke(invocationHandler);
+                        Response response = new Response();
+                        response.setId(request.getId());
+                        if (result.getException() != null) {
+                            response.setData(result.getException());
+                            response.setStatus(Response.SERVER_ERR);
+                        } else {
+                            response.setData(result.getValue());
+                            response.setStatus(Response.OK);
+                        }
+                        channel.sent(response);
+                        return CompletableFuture.completedFuture(result);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
-                    return CompletableFuture.completedFuture(result);
                 }
                 Throws.throwException(RemotingException.class, "远程解析错误");
             }
@@ -112,7 +117,12 @@ public class CloudProtocol implements Protocol {
 
     private <T> Invoker<T> getInvoker(Class<T> refInterfaceClass, ExchangeClient[] exchangeClients, URL providerUrl) {
         return new Invoker<T>() {
-            private AtomicInteger integer = new AtomicInteger();
+            private final AtomicInteger id = new AtomicInteger();
+
+            @Override
+            public URL getUrl() {
+                return providerUrl;
+            }
 
             @Override
             public Class<T> getInterface() {
@@ -125,12 +135,27 @@ public class CloudProtocol implements Protocol {
                 if (exchangeClients.length == 1) {
                     exchangeClient = exchangeClients[0];
                 } else {
-                    exchangeClient = exchangeClients[integer.getAndIncrement() % exchangeClients.length];
+                    exchangeClient = exchangeClients[id.getAndIncrement() % exchangeClients.length];
                 }
                 Request request = new Request();
                 request.setVersion(providerUrl.getParameter("version", "1.0"));
-                request.setTwoWay(!MethodReturnUtils.isVoidClass(invocationHandler.getReturnType()));
-                request.setData(invocationHandler);
+                request.setTwoWay(true);
+                RpcInvocationHandler rpcInvocationHandler = new RpcInvocationHandler();
+
+                rpcInvocationHandler.setAttachment(invocationHandler.getAttachments());
+                rpcInvocationHandler.setInterfaceName(invocationHandler.getInterfaceName());
+                rpcInvocationHandler.setMethodName(invocationHandler.getMethodName());
+                rpcInvocationHandler.setParameterTypes(invocationHandler.getParameterTypes());
+                if (invocationHandler.getParameterTypes() != null) {
+                    String paramterTypeDesc = "";
+                    for (Class<?> pc : invocationHandler.getParameterTypes()) {
+                        paramterTypeDesc += ReflectUtils.getDesc(pc);
+                    }
+                    rpcInvocationHandler.setParameterTypesDesc(paramterTypeDesc);
+                }
+                rpcInvocationHandler.setArguments(invocationHandler.getArguments());
+                request.setData(rpcInvocationHandler);
+
                 CompletableFuture<Response> completableFuture = exchangeClient.request(request);
                 return new AsyncRpcResult(completableFuture, invocationHandler);
             }

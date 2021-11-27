@@ -1,6 +1,7 @@
 package org.qee.cloud.rpc.api;
 
 import org.qee.cloud.common.exceptions.RemotingException;
+import org.qee.cloud.common.model.URL;
 import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.rpc.api.proxy.AsyncRpcResult;
 
@@ -24,6 +25,11 @@ public class AsyncToSyncInvoker<T> implements Invoker<T> {
     }
 
     @Override
+    public URL getUrl() {
+        return invoker.getUrl();
+    }
+
+    @Override
     public Class<T> getInterface() {
         return invoker.getInterface();
     }
@@ -35,7 +41,7 @@ public class AsyncToSyncInvoker<T> implements Invoker<T> {
         if (invokerInvocationHandler.getInvokeMode() == Result.InvokeMode.SYN.ordinal()) {
             AsyncRpcResult asyncRpcResult = (AsyncRpcResult) result;
             try {
-                asyncRpcResult.getValue(Integer.MIN_VALUE, TimeUnit.MILLISECONDS);
+                asyncRpcResult.getValue(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 Throws.throwException(RemotingException.class, "调用被中断");
             } catch (ExecutionException e) {

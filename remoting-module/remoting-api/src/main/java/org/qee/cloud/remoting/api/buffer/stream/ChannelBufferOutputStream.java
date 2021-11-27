@@ -21,7 +21,21 @@ public class ChannelBufferOutputStream extends OutputStream {
     }
 
     @Override
+    public void write(byte[] b, int off, int len) throws IOException {
+        if (len == 0) {
+            return;
+        }
+
+        buffer.writeBytes(b, off, len);
+    }
+
+    @Override
+    public void write(byte[] b) throws IOException {
+        buffer.writeBytes(b);
+    }
+
+    @Override
     public void write(int b) throws IOException {
-        buffer.writeByte(b);
+        buffer.writeByte((byte) b);
     }
 }

@@ -2,12 +2,12 @@ package org.qee.cloud.remoting.api.exchange.response;
 
 public class Response {
 
-    public static final int OK = 200;
-    public static final int CLIENT_TIMEOUT = 401;
+    public static final int OK = 0;
+    public static final int CLIENT_TIMEOUT = 1;
 
-    public static final int SERVER_TIMEOUT = 402;
+    public static final int SERVER_TIMEOUT = 2;
 
-    public static final int SERVER_ERR = 403;
+    public static final int SERVER_ERR = 3;
 
 
     private long id;

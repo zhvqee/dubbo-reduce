@@ -15,6 +15,9 @@ public class ChannelBufferInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        return 0;
+        if (!channelBuffer.readable()) {
+            return -1;
+        }
+        return channelBuffer.readByte() & 0xff;
     }
 }
