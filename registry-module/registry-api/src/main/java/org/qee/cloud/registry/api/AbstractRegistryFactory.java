@@ -2,7 +2,7 @@ package org.qee.cloud.registry.api;
 
 import org.qee.cloud.common.exceptions.RegistryException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.Throws;
+import org.qee.cloud.common.utils.Asserts;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,9 +27,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
             return registryCenter;
         }
         registryCenter = doCreateRegistry(url);
-        if (registryCenter == null) {
-            Throws.throwException(RegistryException.class, "创建注册中心异常");
-        }
+        Asserts.assertTrue(registryCenter != null, RegistryException.class, "创建注册中心异常");
         HOST_KEY_REGISTRY_MAP.put(key, registryCenter);
         return registryCenter;
     }

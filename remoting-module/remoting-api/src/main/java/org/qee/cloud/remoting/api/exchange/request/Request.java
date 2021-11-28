@@ -1,7 +1,10 @@
 package org.qee.cloud.remoting.api.exchange.request;
 
+import lombok.ToString;
+
 import java.util.concurrent.atomic.AtomicLong;
 
+@ToString
 public class Request {
 
     private static AtomicLong idGenerator = new AtomicLong(0);

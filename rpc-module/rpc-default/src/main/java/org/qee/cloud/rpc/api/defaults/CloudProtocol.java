@@ -2,7 +2,7 @@ package org.qee.cloud.rpc.api.defaults;
 
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.Throws;
+import org.qee.cloud.common.utils.Asserts;
 import org.qee.cloud.remoting.api.channel.Channel;
 import org.qee.cloud.remoting.api.channel.DefaultFuture;
 import org.qee.cloud.remoting.api.exchange.ExchangeClient;
@@ -37,50 +37,45 @@ public class CloudProtocol implements Protocol {
     private ExchangeHandler exchangeHandler = new ExchangeHandlerAdapter() {
         @Override
         public CompletableFuture<Object> reply(Channel channel, Object msg) throws RemotingException {
-            if (msg instanceof Request) {//服务端收到请求
-                Request request = (Request) msg;
-                if (request.getData() instanceof RpcInvocationHandler) {
-                    RpcInvocationHandler invocationHandler = (RpcInvocationHandler) request.getData();
-                    String interfaceName = invocationHandler.getInterfaceName();
-                    String version = (String) invocationHandler.getAttachment().get("service.version");
-                    String group = (String) invocationHandler.getAttachment().get("service.group");
-                    Exporter<?> exporter = exportMap.get(interfaceName + ":" + group + ":" + version);
-                    if (exporter == null || exporter.getInvoker() == null) {
-                        Throws.throwException(RemotingException.class, "远程解析错误");
-                    }
-                    Invoker<?> invoker = exporter.getInvoker();
-                    String parameterTypesDesc = invocationHandler.getParameterTypesDesc();
+            Asserts.assertTrue(msg instanceof Request, RemotingException.class, "远程解析异常,msg 类型不是 org.qee.cloud.remoting.api.exchange.request.Request");
+            Request request = (Request) msg;
+            if (!(request.getData() instanceof RpcInvocationHandler)) {
+                throw new RemotingException("远程数据解析异常,request.data 数据类型不是 org.qee.cloud.rpc.api.RpcInvocationHandler");
+            }
+            RpcInvocationHandler invocationHandler = (RpcInvocationHandler) request.getData();
+            String interfaceName = invocationHandler.getInterfaceName();
+            String version = (String) invocationHandler.getAttachment().get("service.version");
+            String group = (String) invocationHandler.getAttachment().get("service.group");
+            Exporter<?> exporter = exportMap.get(interfaceName + ":" + group + ":" + version);
+            Asserts.assertTrue(exporter != null && exporter.getInvoker() != null, RemotingException.class, "远程解析错误:" + invocationHandler);
+            Invoker<?> invoker = exporter.getInvoker();
+            String parameterTypesDesc = invocationHandler.getParameterTypesDesc();
+            if (parameterTypesDesc != null && parameterTypesDesc.length() > 0) {
+                String[] parameterTypesDescs = parameterTypesDesc.split(";");
+                Class<?>[] classArr = new Class[parameterTypesDescs.length];
+                int i = 0;
+                for (String pt : parameterTypesDescs) {
                     try {
-                        if (parameterTypesDesc != null && parameterTypesDesc.length() > 0) {
-                            String[] parameterTypesDescs = parameterTypesDesc.split(";");
-                            Class<?>[] classArr = new Class[parameterTypesDescs.length];
-                            int i = 0;
-                            for (String pt : parameterTypesDescs) {
-                                classArr[i++] = ReflectUtils.getClass(pt);
-                            }
-                            invocationHandler.setParameterTypes(classArr);
-                        }
-
-                        Result result = invoker.invoke(invocationHandler);
-                        Response response = new Response();
-                        response.setId(request.getId());
-                        if (result.getException() != null) {
-                            response.setData(result.getException());
-                            response.setStatus(Response.SERVER_ERR);
-                        } else {
-                            response.setData(result.getValue());
-                            response.setStatus(Response.OK);
-                        }
-                        channel.sent(response);
-                        return CompletableFuture.completedFuture(result);
+                        classArr[i++] = ReflectUtils.getClass(pt);
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        throw new RemotingException("获取参数类型异常,paramterType:" + pt, e);
                     }
                 }
-                Throws.throwException(RemotingException.class, "远程解析错误");
+                invocationHandler.setParameterTypes(classArr);
             }
-            Throws.throwException(RemotingException.class, "远程解析错误");
-            return null;
+
+            Result result = invoker.invoke(invocationHandler);
+            Response response = new Response();
+            response.setId(request.getId());
+            if (result.getException() != null) {
+                response.setData(result.getException());
+                response.setStatus(Response.SERVER_ERR);
+            } else {
+                response.setData(result.getValue());
+                response.setStatus(Response.OK);
+            }
+            channel.sent(response);
+            return CompletableFuture.completedFuture(result);
         }
 
 

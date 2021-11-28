@@ -1,12 +1,14 @@
 package org.qee.cloud.rpc.api;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@ToString
 public class RpcInvocationHandler implements InvocationHandler, Serializable {
     private String interfaceName;
 

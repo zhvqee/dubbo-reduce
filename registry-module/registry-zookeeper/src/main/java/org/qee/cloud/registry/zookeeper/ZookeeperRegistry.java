@@ -7,7 +7,7 @@ import org.apache.curator.retry.RetryUntilElapsed;
 import org.apache.zookeeper.CreateMode;
 import org.qee.cloud.common.exceptions.RegistryException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.Throws;
+import org.qee.cloud.common.utils.Asserts;
 import org.qee.cloud.registry.api.NotifyListener;
 import org.qee.cloud.registry.api.Registry;
 
@@ -32,9 +32,7 @@ public class ZookeeperRegistry implements Registry {
     private CuratorFramework curatorFramework;
 
     public ZookeeperRegistry(URL url) {
-        if (!url.getProtocol().equals("zookeeper")) {
-            Throws.throwException(RegistryException.class, "连接注册中心zookeeper,url协议错误");
-        }
+        Asserts.assertTrue(url.getProtocol().equals("zookeeper"), RegistryException.class, "连接注册中心zookeeper,url协议错误:" + url);
         curatorFramework = CuratorFrameworkFactory.builder()
                 .connectString(url.getHost() + ":" + url.getPort())
                 .retryPolicy(new RetryUntilElapsed(5000, 200))
@@ -52,7 +50,7 @@ public class ZookeeperRegistry implements Registry {
         try {
             recursiveCreateNode(ROOT + PROVIDERS, false);
         } catch (Exception e) {
-            Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
+            throw new RegistryException("连接注册中心异常,url:" + url, e);
         }
         //org.qee.service.DemoService:*:*
         String interfaceService = url.getInterfaceGroupVersion();
@@ -61,7 +59,7 @@ public class ZookeeperRegistry implements Registry {
         try {
             recursiveCreateNode(ROOT + PROVIDERS + SEPARATOR + interfaceService + SEPARATOR + hostDomain, true);
         } catch (Exception e) {
-            Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
+            throw new RegistryException("注册服务异常,url:" + url, e);
         }
 
     }
@@ -69,7 +67,7 @@ public class ZookeeperRegistry implements Registry {
 
     @Override
     public void unregister(URL url) {
-        Throws.throwException(RegistryException.class, "带开发....");
+        // TODO: 2021/11/28   待开发
     }
 
     //consumer://127.0.0.1:20881/org.qee.service.DemoService:*:*
@@ -80,7 +78,7 @@ public class ZookeeperRegistry implements Registry {
         try {
             recursiveCreateNode(ROOT + CONSUMERS, false);
         } catch (Exception e) {
-            Throws.throwException(RegistryException.class, "连接注册中心异常,url:" + url);
+            throw new RegistryException("连接注册中心异常,url:" + url, e);
         }
         String hostDomain = url.getHostDomain();
         String interfaceProviderVersion = url.getInterfaceGroupVersion();
@@ -96,14 +94,14 @@ public class ZookeeperRegistry implements Registry {
                 listener.notify(providerList);
             }
         } catch (Exception e) {
-            Throws.throwException(RegistryException.class, "注册服务异常,url:" + url);
+            throw new RegistryException("连接注册中心异常,url:" + url, e);
         }
 
     }
 
     @Override
     public void unsubscribe(URL url, NotifyListener listener) {
-        Throws.throwException(RegistryException.class, "带开发....");
+        // TODO: 2021/11/28  待开发
     }
 
     // org.qee.service.DemoService:*:*/127.0.0.1:20881

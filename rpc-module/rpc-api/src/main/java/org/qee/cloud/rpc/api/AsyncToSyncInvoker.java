@@ -2,7 +2,6 @@ package org.qee.cloud.rpc.api;
 
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.rpc.api.proxy.AsyncRpcResult;
 
 import java.util.concurrent.ExecutionException;
@@ -43,11 +42,11 @@ public class AsyncToSyncInvoker<T> implements Invoker<T> {
             try {
                 asyncRpcResult.getValue(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
-                Throws.throwException(RemotingException.class, "调用被中断");
+                throw new RemotingException("系统调用中断" + invocationHandler, e);
             } catch (ExecutionException e) {
-                Throws.throwException(RemotingException.class, "执行异常");
+                throw new RemotingException("系统执行异常" + invocationHandler, e);
             } catch (TimeoutException e) {
-                Throws.throwException(RemotingException.class, "执行超时");
+                throw new RemotingException("系统执行超时" + invocationHandler, e);
             }
         }
         return result;

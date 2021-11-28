@@ -11,7 +11,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.common.model.URL;
-import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.remoting.api.channel.Channel;
 import org.qee.cloud.remoting.api.channel.DefaultFuture;
 import org.qee.cloud.remoting.api.channelHanlder.ChannelHandler;
@@ -63,15 +62,14 @@ public class Netty4Client extends AbstractClient {
 
     @Override
     public InetSocketAddress getLocalAddress() {
-        return null;
+        return new InetSocketAddress(getUrl().getHost(), getUrl().getPort());
     }
 
     @Override
     public CompletableFuture<Response> request(Request request) {
         ChannelFuture channelFuture = channel.writeAndFlush(request);
         if (channelFuture.cause() != null) {
-            System.out.println(channelFuture.cause());
-            Throws.throwException(RemotingException.class, "远程异常");
+            throw new RemotingException("远程调用异常", channelFuture.cause());
         }
         return DefaultFuture.newFuture(NettyChannel.getOrAddChannel(channel), request);
 
@@ -103,21 +101,15 @@ public class Netty4Client extends AbstractClient {
 
     @Override
     protected void doConnect() throws InterruptedException {
-        while (true) {
-            ChannelFuture channelFuture = bootstrap.connect(getUrl().getHost(), getUrl().getPort());
-            boolean uninterruptibly = channelFuture.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
-            if (uninterruptibly && channelFuture.isSuccess()) {
-                if (Netty4Client.this.channel != null) {
-                    Netty4Client.this.channel.close();
-                }
-                this.channel = channelFuture.channel();
-                break;
-
-            } else {
-                //  Throws.throwException(RemotingException.class, "远程连接异常,providerUrl：" + getUrl());
+        ChannelFuture channelFuture = bootstrap.connect(getUrl().getHost(), getUrl().getPort());
+        boolean uninterruptibly = channelFuture.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
+        if (uninterruptibly && channelFuture.isSuccess()) {
+            if (Netty4Client.this.channel != null) {
+                Netty4Client.this.channel.close();
             }
-            Thread.sleep(100);
+            this.channel = channelFuture.channel();
+            return;
         }
-
+        throw new RemotingException("远程连接异常,providerUrl:" + getUrl());
     }
 }

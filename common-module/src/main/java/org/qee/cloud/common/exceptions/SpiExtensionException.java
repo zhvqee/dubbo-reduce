@@ -12,4 +12,8 @@ public class SpiExtensionException extends CloudException {
     public SpiExtensionException(String message) {
         super(message);
     }
+
+    public SpiExtensionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
