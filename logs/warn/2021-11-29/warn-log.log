@@ -1,0 +1,5 @@
+2021-11-29 23:21:37.534 WARN  org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'cloudReferenceBeanPostProcessor': Initialization of bean failed; nested exception is java.lang.IllegalArgumentException: Pointcut is not well-formed: expecting 'name pattern cannot finish with ..' at character position 28
+execution(* org.qee.cloud.. *(..))
+                            ^
+
+2021-11-29 23:24:06.416 WARN  io.netty.bootstrap.ServerBootstrap - Unknown channel option 'io.netty.channel.unix.UnixChannelOption#SO_REUSEPORT' for channel '[id: 0xfb97a41c, L:/192.168.20.211:20000 - R:/192.168.20.211:65087]'
