@@ -57,5 +57,6 @@ public @interface CloudReference {
 
     boolean check() default true;
 
+    long timeout() default Long.MAX_VALUE;
 
 }

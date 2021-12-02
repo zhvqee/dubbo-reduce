@@ -15,6 +15,22 @@ public class RandomLoadBalance implements LoadBalance {
         if (invokerList.size() == 1) {
             return invokerList.get(0);
         }
-        return invokerList.get(ThreadLocalRandom.current().nextInt(invokerList.size()));
+        int allWeight = 0;
+        for (Invoker<T> invoker : invokerList) {
+            allWeight += getWeight(invoker);
+        }
+        int weight = ThreadLocalRandom.current().nextInt(allWeight);
+        int i = 0;
+        for (; i < invokerList.size(); i++) {
+            weight -= getWeight(invokerList.get(i));
+            if (weight <= 0) {
+                break;
+            }
+        }
+        return invokerList.get(i);
+    }
+
+    private <T> int getWeight(Invoker<T> invoker) {
+        return invoker.getUrl().getParameter("weight", 100);
     }
 }
