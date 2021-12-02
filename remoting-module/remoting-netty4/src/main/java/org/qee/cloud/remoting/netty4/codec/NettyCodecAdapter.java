@@ -64,7 +64,7 @@ public class NettyCodecAdapter {
         protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             Object decode = super.decode(ctx, in);
             if (decode != null) {
-                return NettyCodecAdapter.this.codec.decode(new NettyBackedChannelBuffer(in));
+                return NettyCodecAdapter.this.codec.decode(new NettyBackedChannelBuffer((ByteBuf) decode));
             }
             return null;
         }

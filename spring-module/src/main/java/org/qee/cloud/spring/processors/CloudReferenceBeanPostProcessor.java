@@ -2,7 +2,6 @@ package org.qee.cloud.spring.processors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.qee.cloud.common.exceptions.InjectException;
-import org.qee.cloud.common.utils.Throws;
 import org.qee.cloud.rpc.api.annotation.CloudReference;
 import org.qee.cloud.spring.config.CloudReferenceConfigBean;
 import org.springframework.beans.BeansException;
@@ -61,8 +60,7 @@ public class CloudReferenceBeanPostProcessor extends InstantiationAwareBeanPostP
                 metadata.inject(bean, beanName, pvs);
             }
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            Throws.throwException(InjectException.class, throwable.getMessage());
+            throw new InjectException("属性注入异常,bean" + bean, throwable);
         }
         return pvs;
     }

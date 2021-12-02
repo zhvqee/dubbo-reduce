@@ -5,6 +5,15 @@ package org.qee.cloud.common.utils;
  */
 public class ByteUtils {
 
+    public static void writeByte(byte[] bytes, int localtion, int id) {
+        bytes[localtion] = (byte) id;
+    }
+
+    public static int readByte(byte[] bytes, int localtion) {
+        return bytes[localtion];
+    }
+
+
     /**
      * @param bytes
      * @param localtion
@@ -18,16 +27,39 @@ public class ByteUtils {
 
     /**
      * id  4字节    0X11,22,33,44
+     * 大端模式
      *
      * @param bytes
      * @param localtion
      * @param id
      */
+    // 0X11223344
+    // 0  ,  1  ,  2  , 3
+    //  11   22   33   44
     public static void writeInt(byte[] bytes, int localtion, int id) {
-        bytes[localtion + 3] = (byte) (id >>> 24);
-        bytes[localtion + 2] = (byte) (id >>> 16);
-        bytes[localtion + 1] = (byte) (id >>> 8);
-        bytes[localtion] = (byte) id;
+        bytes[localtion + 3] = (byte) id;
+        bytes[localtion + 2] = (byte) (id >>> 8);
+        bytes[localtion + 1] = (byte) (id >>> 16);
+        bytes[localtion] = (byte) (id >>> 24);
+    }
+
+    // 0X11223344
+    // 0  ,  1  ,  2  , 3
+    //  11   22   33   44
+
+    public static int byte2Int(byte[] bytes, int location) {
+        return ((bytes[location + 0] & 0xFF) << 24) +
+                ((bytes[location + 1] & 0xFF) << 16) +
+                ((bytes[location + 2] & 0xFF) << 8) +
+                ((bytes[location + 3] & 0XFF));
+    }
+
+    public static void main(String[] args) {
+        byte[] header = new byte[16];
+        writeInt(header, 3, 200);
+        int l = byte2Int(header, 3);
+        System.out.println(l);
+
     }
 
 
@@ -39,28 +71,16 @@ public class ByteUtils {
      * @param id
      */
     public static void writeLong(byte[] bytes, int localtion, long id) {
-        bytes[localtion + 7] = (byte) (id >>> 56);
-        bytes[localtion + 6] = (byte) (id >>> 48);
-        bytes[localtion + 5] = (byte) (id >>> 40);
-        bytes[localtion + 4] = (byte) (id >>> 32);
-        bytes[localtion + 3] = (byte) (id >>> 24);
-        bytes[localtion + 2] = (byte) (id >>> 16);
-        bytes[localtion + 1] = (byte) (id >>> 8);
-        bytes[localtion] = (byte) id;
+        bytes[localtion + 7] = (byte) id;
+        bytes[localtion + 6] = (byte) (id >>> 8);
+        bytes[localtion + 5] = (byte) (id >>> 16);
+        bytes[localtion + 4] = (byte) (id >>> 24);
+        bytes[localtion + 3] = (byte) (id >>> 32);
+        bytes[localtion + 2] = (byte) (id >>> 40);
+        bytes[localtion + 1] = (byte) (id >>> 48);
+        bytes[localtion] = (byte) (id >>> 56);
     }
 
-    public static void main(String[] args) {
-        byte[] b = new byte[2];
-        b[0] = (byte) 0x1213;
-        System.out.println(Integer.toHexString(b[0]));
-    }
-
-    public static int byte2Int(byte[] bytes, int location) {
-        return ((bytes[location + 3] & 0xFF) << 0) +
-                ((bytes[location + 2] & 0xFF) << 8) +
-                ((bytes[location + 1] & 0xFF) << 16) +
-                ((bytes[location + 0]) << 24);
-    }
 
     public static long byte2Long(byte[] bytes, int location) {
         return ((bytes[location + 7] & 0xFF) << 0) +

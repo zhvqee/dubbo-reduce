@@ -1,6 +1,10 @@
 package org.qee.cloud.rpc.api;
 
+import java.util.Map;
+
 public interface InvocationHandler {
+
+    String getInterfaceName();
 
     String getMethodName();
 
@@ -8,5 +12,6 @@ public interface InvocationHandler {
 
     Object[] getArguments();
 
-    Class<?> getReturnType();
+    Map<String,Object> getAttachments();
+
 }

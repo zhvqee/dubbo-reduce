@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>demo-provider</artifactId>
+    <version>${revision}</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -30,6 +31,11 @@
         <dependency>
             <groupId>org.zhvqee</groupId>
             <artifactId>serialization-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zhvqee</groupId>
+            <artifactId>serialization-hessian2</artifactId>
         </dependency>
 
         <dependency>

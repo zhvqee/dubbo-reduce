@@ -13,6 +13,10 @@ public class RemotingException extends CloudException {
         super(message);
     }
 
+    public RemotingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public RemotingException(InetSocketAddress localAddress, InetSocketAddress remoteAddress, String message) {
         super(message);
 

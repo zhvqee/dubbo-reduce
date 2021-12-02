@@ -1,6 +1,7 @@
 package org.qee.cloud.common.model;
 
 import lombok.Data;
+import lombok.ToString;
 import org.qee.cloud.common.constants.CommonConstants;
 
 import java.net.InetSocketAddress;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@ToString
 public class URL {
 
     private String protocol;

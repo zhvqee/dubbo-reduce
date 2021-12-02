@@ -3,6 +3,7 @@ package com.qee.cloud.cluster.impls;
 import com.qee.cloud.cluster.Directory;
 import com.qee.cloud.loadbalance.LoadBalance;
 import org.qee.cloud.common.extentions.ExtensionLoader;
+import org.qee.cloud.common.model.URL;
 import org.qee.cloud.rpc.api.InvocationHandler;
 import org.qee.cloud.rpc.api.Invoker;
 import org.qee.cloud.rpc.api.Result;
@@ -15,6 +16,11 @@ public class FailFastClusterInvoker<T> implements Invoker<T> {
 
     public FailFastClusterInvoker(Directory<T> directory) {
         this.directory = directory;
+    }
+
+    @Override
+    public URL getUrl() {
+        return this.directory.getConsumerUrl();
     }
 
     @Override

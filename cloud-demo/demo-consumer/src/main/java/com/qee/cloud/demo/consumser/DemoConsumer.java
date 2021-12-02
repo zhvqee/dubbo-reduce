@@ -19,7 +19,11 @@ public class DemoConsumer {
     public static void main(String[] args) {
         SpringApplication.run(DemoConsumer.class, args);
         UserServiceHolder userServiceHolder = BeanContext.getBean(UserServiceHolder.class);
-        userServiceHolder.print();
+        for (int i = 0; i < 1000; i++) {
+            userServiceHolder.print(i);
+            System.out.println(i);
+        }
+
     }
 
 }

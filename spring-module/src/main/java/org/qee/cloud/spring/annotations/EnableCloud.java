@@ -22,4 +22,6 @@ public @interface EnableCloud {
     int serviceRegistryPort() default 20888;
 
     String serviceRegistryProtocol() default "cloud";
+
+    boolean openTraceLog() default true;
 }

@@ -1,9 +1,9 @@
 package org.qee.cloud.rpc.api.proxy;
 
+import org.qee.cloud.common.exceptions.RemotingException;
 import org.qee.cloud.remoting.api.exchange.response.Response;
 import org.qee.cloud.rpc.api.InvocationHandler;
 import org.qee.cloud.rpc.api.Result;
-
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -51,16 +51,27 @@ public class AsyncRpcResult implements Result {
 
     @Override
     public boolean hasException() {
-        return false;
+        return getValue() instanceof Exception;
     }
 
     @Override
     public Throwable getException() {
-        return null;
+        return (Throwable) getValue();
     }
 
     @Override
     public void setException(Throwable t) {
+        try {
+            if (responseCompletableFuture.isDone()) {
+                responseCompletableFuture.get().setData(t);
+            } else {
+                Response appResponse = new Response();
+                appResponse.setData(t);
+                responseCompletableFuture.complete(appResponse);
+            }
+        } catch (Exception e) {
+            throw new RemotingException("获取结果异常", e);
+        }
 
     }
 }

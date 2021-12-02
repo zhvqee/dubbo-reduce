@@ -1,7 +1,7 @@
 package org.qee.cloud.spring.processors;
 
 import org.qee.cloud.common.exceptions.ExportException;
-import org.qee.cloud.common.utils.Throws;
+import org.qee.cloud.common.utils.Asserts;
 import org.qee.cloud.rpc.api.annotation.CloudService;
 import org.qee.cloud.spring.config.CloudServiceConfigBean;
 import org.springframework.beans.BeansException;
@@ -90,10 +90,7 @@ public class CloudServiceBeanPostProcessor implements BeanDefinitionRegistryPost
                 interfaceClass = interfaces[0];
             }
         }
-        if (interfaceClass == null) {
-            Throws.throwException(ExportException.class, "实现类：" + classType.getName() + "没有实现的接口");
-        }
-
+        Asserts.assertTrue(interfaceClass, ExportException.class, "实现类：" + classType.getName() + "没有实现的接口");
         return interfaceClass;
     }
 

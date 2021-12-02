@@ -18,7 +18,6 @@ import org.qee.cloud.common.utils.Asserts;
 import org.qee.cloud.common.utils.CollectionUtils;
 import org.qee.cloud.common.utils.GeneratorKeys;
 import org.qee.cloud.common.utils.Reflects;
-import org.qee.cloud.common.utils.Throws;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
@@ -100,7 +99,7 @@ public class ExtensionLoader<T> {
                         //当天进行内部injectField时。ObjectFactory 对象还未在holder中，会循环创建容器
                         injectField(value, targetClass);
                     } catch (InvocationTargetException | IllegalAccessException e) {
-                        Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
+                        throw new SpiExtensionException("class:" + targetClass.getName() + "设置参数错误", e);
                     }
 
                     // 这里该对象进行包裹，比如包裹一层 Mock对象
@@ -124,7 +123,7 @@ public class ExtensionLoader<T> {
                     result = clzz.getConstructor(refClass).newInstance(result);
                     injectField(result, clzz);
                 } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                    Throws.throwException(SpiExtensionException.class, "class:" + clzz.getName() + "需要一个参数为" + refClass.getName() + "的构造函数");
+                    throw new SpiExtensionException("class:" + clzz.getName() + "需要一个参数为" + refClass.getName() + "的构造函数", e);
                 }
             }
         }
@@ -152,10 +151,8 @@ public class ExtensionLoader<T> {
             CLASS_TO_INS_MAP.put(targetClass, instance);
             //injectFiled(instance, targetClass);
         } catch (InstantiationException | IllegalAccessException e) {
-            Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "没有默认构造函数");
-        } /*catch (InvocationTargetException e) {
-            Throws.throwException(SpiExtensionException.class, "class:" + targetClass.getName() + "设置参数错误");
-        }*/
+            throw new SpiExtensionException("class:" + targetClass.getName() + "没有默认构造函数", e);
+        }
 
 
         return instance;
@@ -261,7 +258,7 @@ public class ExtensionLoader<T> {
                     }
                     NAME_CLASS_MAP.put(key, targetImplClass);
                 } catch (ClassNotFoundException e) {
-                    Throws.throwException(SpiExtensionException.class, "class:" + keyValue[1] + " 查找不到");
+                    throw new SpiExtensionException("class:" + keyValue[1] + " 查找不到", e);
                 }
             });
         }
@@ -338,10 +335,7 @@ public class ExtensionLoader<T> {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (args == null || args.length == 0) {
-                Throws.throwException(SpiExtensionException.class, "class:" + method.getDeclaringClass() + "没有参数类型为" + URL.class.getName());
-            }
-
+            Asserts.assertTrue(args != null && args.length != 0, SpiExtensionException.class, "class:" + method.getDeclaringClass() + "没有参数类型为" + URL.class.getName());
             Object param = Arrays.stream(args).filter(arg -> URL.class.isAssignableFrom(arg.getClass())).findFirst().orElse(null);
             if (param == null) {
                 for (Object arg : args) {
@@ -357,7 +351,6 @@ public class ExtensionLoader<T> {
                     }
                 }
             }
-
 
             Asserts.assertTrue(param, SpiExtensionException.class, "class:" + method.getDeclaringClass() + "没有参数类型为" + URL.class.getName());
 

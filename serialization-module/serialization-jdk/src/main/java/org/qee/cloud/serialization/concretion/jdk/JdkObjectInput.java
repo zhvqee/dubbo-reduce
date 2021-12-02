@@ -1,4 +1,4 @@
-package com.individual.serialization.concretion.jdk;
+package org.qee.cloud.serialization.concretion.jdk;
 
 import org.qee.cloud.serialization.api.ObjectInput;
 

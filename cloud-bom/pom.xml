@@ -30,6 +30,13 @@
                 <version>${revision}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.zhvqee</groupId>
+                <artifactId>serialization-hessian2</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <dependency>
                 <artifactId>rpc-api</artifactId>
                 <groupId>org.zhvqee</groupId>
