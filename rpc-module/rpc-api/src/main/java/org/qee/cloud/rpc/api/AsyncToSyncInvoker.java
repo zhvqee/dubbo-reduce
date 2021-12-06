@@ -40,7 +40,7 @@ public class AsyncToSyncInvoker<T> implements Invoker<T> {
         if (invokerInvocationHandler.getInvokeMode() == Result.InvokeMode.SYN.ordinal()) {
             AsyncRpcResult asyncRpcResult = (AsyncRpcResult) result;
             try {
-                asyncRpcResult.getValue(Integer.MAX_VALUE, TimeUnit.MILLISECONDS);
+                asyncRpcResult.getValue(invoker.getUrl().getParameter("timeout", Integer.MAX_VALUE), TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 throw new RemotingException("系统调用中断" + invocationHandler, e);
             } catch (ExecutionException e) {

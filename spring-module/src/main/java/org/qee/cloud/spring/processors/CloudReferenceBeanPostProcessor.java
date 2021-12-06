@@ -155,6 +155,7 @@ public class CloudReferenceBeanPostProcessor extends InstantiationAwareBeanPostP
                     configBean.setVersion((String) annotationAttributes.get("version"));
                     configBean.setCheck((Boolean) annotationAttributes.get("check"));
                     configBean.setMock((String) annotationAttributes.get("mock"));
+                    configBean.setTimeout((Long) annotationAttributes.get("timeout"));
                     // 这里和进行服务引用入口
 
                     injectedObjectMap.put(injectedObjectBeanName, configBean.get());

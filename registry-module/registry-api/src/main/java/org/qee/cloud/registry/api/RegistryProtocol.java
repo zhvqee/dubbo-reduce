@@ -40,6 +40,7 @@ public class RegistryProtocol implements Protocol {
                 .path(refInterfaceClass.getName()).build();
         consumerUrl.addParameter("service.group", url.getParameter("service.group", "*"));
         consumerUrl.addParameter("service.version", url.getParameter("service.version", "*"));
+        consumerUrl.addParameter("timeout", url.getParameter("timeout"));
         return consumerUrl;
     }
 

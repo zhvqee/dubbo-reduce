@@ -33,6 +33,8 @@ public class CloudReferenceConfig<T> {
 
     private boolean inited;
 
+    private long timeout;
+
     private ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
 
     private Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
@@ -54,6 +56,7 @@ public class CloudReferenceConfig<T> {
         paramMap.put("service.registry.port", registryUrl.getParameter("service.registry.port"));
         paramMap.put("service.group", group);
         paramMap.put("service.version", version);
+        paramMap.put("timeout", timeout + "");
 
         registryUrl.addParameters(paramMap);
         Invoker<T> invoker = protocol.refer(interfaceClass, registryUrl);
