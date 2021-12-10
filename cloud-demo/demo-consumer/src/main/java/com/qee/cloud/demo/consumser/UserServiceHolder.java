@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserServiceHolder {
-    @CloudReference(id = "userService", group = "*", version = "*", check = false)
+    @CloudReference(id = "userService", group = "*", version = "*", check = false, timeout = 100)
     private UserService userService;
 
     public void print(int i) {

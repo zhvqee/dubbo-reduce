@@ -56,7 +56,11 @@ public class AsyncRpcResult implements Result {
 
     @Override
     public Throwable getException() {
-        return (Throwable) getValue();
+        Object value = getValue();
+        if (value instanceof Throwable) {
+            return (Throwable) value;
+        }
+        return null;
     }
 
     @Override

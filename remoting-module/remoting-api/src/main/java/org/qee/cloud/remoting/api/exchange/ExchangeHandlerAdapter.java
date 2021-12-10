@@ -43,5 +43,6 @@ public class ExchangeHandlerAdapter implements ExchangeHandler {
     @Override
     public void caught(Channel channel, Throwable exception) throws RemotingException {
         System.out.println("异常：" + exception);
+        exception.printStackTrace();
     }
 }

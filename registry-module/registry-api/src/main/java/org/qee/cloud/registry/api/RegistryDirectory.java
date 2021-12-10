@@ -69,6 +69,8 @@ public class RegistryDirectory<T> implements Directory<T>, NotifyListener {
     private Invoker<T> toInvoker(URL url) {
         //添加引用的
         url.addParameter("protocol", consumerUrl.getProtocol());
+        //添加consumer 配置，如果consumer配置已consumer为主
+        url.addParameters(consumerUrl.getParameters());
         Invoker<T> invoker = protocol.refer(interfaceClass, url);
         providerInvokersMap.put(invoker.getUrl().getHostDomain(), invoker);
         return invoker;
